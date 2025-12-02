@@ -90,29 +90,39 @@ def generate_test_pdf(json_file, output_pdf):
     y_position -= 2 * cm
 
     row_height = 0.8 * cm
-    box_height = (data['num_questions'] * row_height)
-
-    c.rect(margin + 2.5*cm, y_position - box_height -0.4*cm , width - 8.2 * margin, box_height)
+    box_height = (data['num_questions'] * row_height + 0.3*cm)
+    
+    # Define starting position for circles (closer to numbers)
+    x_start = margin + 2 * cm
+    circle_spacing = 1.2 * cm
+    
+    # Calculate rectangle width based on number of answers
+    rect_width = (num_answers * circle_spacing) + 0.2*cm
+    
+    # Draw the rectangle (moved closer to numbers)
+    c.rect(x_start - 0.7*cm, y_position - box_height - 0.3*cm, rect_width, box_height)
+    
+    # Draw letters above the rectangle, aligned with circles
+    c.setFont(font_bold, 10)
+    for i in range(num_answers):
+        letter = chr(65 + i)
+        x_pos = x_start + (i * circle_spacing)
+        text_width = c.stringWidth(letter, font_bold, 10)
+        c.drawString(x_pos - text_width / 2, y_position + 0.1 * cm, letter)
 
     y_position -= 0.8 * cm
 
+    # Draw question numbers and circles
     for question in data['questions']:
         q_id = question['id']
 
         c.setFont(font_regular, 10)
         c.drawString(margin + 0.5 * cm, y_position - 0.1 * cm, f"{q_id}.")
 
-        x_start = margin + 3 * cm
-        circle_spacing = 1.2 * cm
-
+        # Draw circles (without letters inside)
         for i in range(num_answers):
-            letter = chr(65 + i)
             x_pos = x_start + (i * circle_spacing)
-
             c.circle(x_pos, y_position, 0.3 * cm, stroke=1, fill=0)
-            c.setFont(font_bold, 9)
-            text_width = c.stringWidth(letter, font_bold, 9)
-            c.drawString(x_pos - text_width / 2, y_position - 0.15 * cm, letter)
 
         y_position -= row_height
 
