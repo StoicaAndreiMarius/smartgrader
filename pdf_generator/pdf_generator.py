@@ -62,8 +62,8 @@ def generate_test_pdf(json_file, output_pdf):
         data = json.load(f)
 
     num_answers = data['num_answers']
-    pdfmetrics.registerFont(TTFont('Arial', 'arial.ttf'))
-    pdfmetrics.registerFont(TTFont('Arial-Bold', 'arialbd.ttf'))
+    pdfmetrics.registerFont(TTFont('Arial', '../fonts/arial.ttf'))
+    pdfmetrics.registerFont(TTFont('Arial-Bold', '../fonts/arialbd.ttf'))
     font_regular = 'Arial'
     font_bold = 'Arial-Bold'
 
