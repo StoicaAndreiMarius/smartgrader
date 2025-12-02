@@ -90,9 +90,9 @@ def generate_test_pdf(json_file, output_pdf):
     y_position -= 2 * cm
 
     row_height = 0.8 * cm
-    box_height = (data['num_questions'] * row_height) + 0.5 * cm
+    box_height = (data['num_questions'] * row_height)
 
-    c.rect(margin, y_position - box_height, width - 5 * margin, box_height)
+    c.rect(margin + 2.5*cm, y_position - box_height -0.4*cm , width - 8.2 * margin, box_height)
 
     y_position -= 0.8 * cm
 

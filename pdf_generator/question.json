@@ -8,70 +8,70 @@
       "id": 1,
       "text": "Care este rezultatul calculului: 2 + 2 × 3?",
       "img": null,
-      "correct_answer": "B",
+      "correct_answer": "1",
       "options": ["4", "8", "10", "12"]
     },
     {
       "id": 2,
       "text": "Identifică figura geometrică din imaginea alăturată:",
       "img": "path/to/image.png",
-      "correct_answer": "C",
+      "correct_answer": "2",
       "options": ["Pătrat", "Triunghi", "Cerc", "Dreptunghi"]
     },
     {
       "id": 3,
       "text": "Care este valoarea lui x în ecuația: x + 5 = 12?",
       "img": null,
-      "correct_answer": "A",
+      "correct_answer": "0",
       "options": ["7", "5", "6", "8"]
     },
     {
       "id": 4,
       "text": "Câte laturi are un hexagon?",
       "img": null,
-      "correct_answer": "C",
+      "correct_answer": "2",
       "options": ["4", "5", "6", "8"]
     },
     {
       "id": 5,
       "text": "Care este radical din 64?",
       "img": null,
-      "correct_answer": "B",
+      "correct_answer": "1",
       "options": ["6", "8", "7", "9"]
     },
     {
       "id": 6,
       "text": "Rezolvă ecuația: 3x - 9 = 0.",
       "img": null,
-      "correct_answer": "A",
+      "correct_answer": "0",
       "options": ["3", "0", "9", "-3"]
     },
     {
       "id": 7,
       "text": "Care este aria unui pătrat cu latura de 5 cm?",
       "img": null,
-      "correct_answer": "D",
+      "correct_answer": "3",
       "options": ["10", "20", "30", "25"]
     },
     {
       "id": 8,
       "text": "Calculează: 15% din 200.",
       "img": null,
-      "correct_answer": "B",
+      "correct_answer": "1",
       "options": ["20", "30", "25", "35"]
     },
     {
       "id": 9,
       "text": "Care este perimetrul unui dreptunghi cu L=8cm și l=3cm?",
       "img": null,
-      "correct_answer": "C",
+      "correct_answer": "2",
       "options": ["16", "18", "22", "24"]
     },
     {
       "id": 10,
       "text": "Identifică tipul de triunghi din imagine:",
       "img": "path/to/triangle.png",
-      "correct_answer": "A",
+      "correct_answer": "0",
       "options": [
         "Triunghi isoscel",
         "Triunghi dreptunghic",
@@ -83,49 +83,49 @@
       "id": 11,
       "text": "Care este valoarea expresiei: 5² - 3²?",
       "img": null,
-      "correct_answer": "D",
+      "correct_answer": "3",
       "options": ["10", "12", "14", "16"]
     },
     {
       "id": 12,
       "text": "Câte grade are un unghi drept?",
       "img": null,
-      "correct_answer": "B",
+      "correct_answer": "1",
       "options": ["45°", "90°", "180°", "60°"]
     },
     {
       "id": 13,
       "text": "Rezolvă: 2(x + 3) = 14.",
       "img": null,
-      "correct_answer": "C",
+      "correct_answer": "2",
       "options": ["2", "3", "4", "5"]
     },
     {
       "id": 14,
       "text": "Care este volumul unui cub cu latura de 4 cm?",
       "img": null,
-      "correct_answer": "A",
+      "correct_answer": "0",
       "options": ["64 cm³", "16 cm³", "32 cm³", "48 cm³"]
     },
     {
       "id": 15,
       "text": "Calculează media aritmetică: 10, 20, 30.",
       "img": null,
-      "correct_answer": "B",
+      "correct_answer": "1",
       "options": ["15", "20", "25", "30"]
     },
     {
       "id": 16,
       "text": "Care este cel mai mic număr prim?",
       "img": null,
-      "correct_answer": "A",
+      "correct_answer": "0",
       "options": ["2", "1", "0", "3"]
     },
     {
       "id": 17,
       "text": "Identifică elementele din diagrama Venn:",
       "img": "path/to/venn.png",
-      "correct_answer": "C",
+      "correct_answer": "2",
       "options": [
         "Intersecția mulțimilor",
         "Reuniunea mulțimilor",
@@ -137,21 +137,21 @@
       "id": 18,
       "text": "Care este rezultatul: 100 ÷ 4?",
       "img": null,
-      "correct_answer": "D",
+      "correct_answer": "3",
       "options": ["10", "15", "20", "25"]
     },
     {
       "id": 19,
       "text": "Câte fețe are o piramidă patrulateră?",
       "img": null,
-      "correct_answer": "B",
+      "correct_answer": "1",
       "options": ["4", "5", "6", "8"]
     },
     {
       "id": 20,
       "text": "Rezolvă inecuația: x + 7 > 15.",
       "img": null,
-      "correct_answer": "C",
+      "correct_answer": "2",
       "options": [
         "x > 5",
         "x > 7",
