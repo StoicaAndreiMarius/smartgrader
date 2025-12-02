@@ -145,4 +145,4 @@ def generate_test_pdf(json_file, output_pdf):
 
 
 if __name__ == "__main__":
-    generate_test_pdf('questions.json', 'test_output.pdf')
+    generate_test_pdf('question.json', 'test_output.pdf')
