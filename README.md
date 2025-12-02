@@ -14,7 +14,7 @@ Windows:
 Creează venv
 python -m venv venv
 
-# Activează venv (Command Prompt)
+Activează venv (Command Prompt)
 venv\Scripts\activate.bat
 
 SAU activează venv (PowerShell)
