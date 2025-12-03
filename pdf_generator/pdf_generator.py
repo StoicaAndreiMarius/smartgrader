@@ -89,7 +89,7 @@ def generate_test_pdf(json_file, output_pdf):
     c.drawString(margin, y_position, "Prenume: _____________________________")
     y_position -= 2 * cm
 
-    row_height = 0.8 * cm
+    row_height = 1 * cm
     box_height = (data['num_questions'] * row_height + 0.3*cm)
     
     # Define starting position for circles (closer to numbers)
@@ -138,7 +138,7 @@ def generate_test_pdf(json_file, output_pdf):
     y_position -= 1 * cm
 
     for question in data['questions']:
-        if y_position < margin + 8 * cm:
+        if y_position < margin + 1 * cm:
             c.showPage()
             y_position = height - margin
 
@@ -154,5 +154,4 @@ def generate_test_pdf(json_file, output_pdf):
     print(f"PDF generat cu succes: {output_pdf}")
 
 
-if __name__ == "__main__":
-    generate_test_pdf('question.json', 'test_output.pdf')
+generate_test_pdf('question.json', 'test_output.pdf')
