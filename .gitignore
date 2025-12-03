@@ -1,2 +1,7 @@
 venv/
 img/
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.python-version
