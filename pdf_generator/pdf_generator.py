@@ -4,6 +4,8 @@ from reportlab.lib.units import cm
 from reportlab.pdfgen import canvas
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+import qrcode
+import os
 
 
 def draw_question_with_options(c, question, y_position, margin, width, font_regular, font_bold):
@@ -61,6 +63,7 @@ def generate_test_pdf(json_file, output_pdf):
     with open(json_file, 'r', encoding='utf-8') as f:
         data = json.load(f)
 
+    
     num_answers = data['num_answers']
     pdfmetrics.registerFont(TTFont('Arial', '../fonts/arial.ttf'))
     pdfmetrics.registerFont(TTFont('Arial-Bold', '../fonts/arialbd.ttf'))
@@ -77,8 +80,12 @@ def generate_test_pdf(json_file, output_pdf):
     c.setFont(font_bold, 18)
     c.drawString(margin, y_position, data['title'])
 
-    c.setFont(font_bold, 14)
-    c.drawString(margin + 10 * cm, y_position, f"Varianta:     {data['varianta']}")
+    qr = qrcode.make(data['id'])
+    qr_path = "qr.png"
+    qr.save(qr_path)
+    c.drawImage(qr_path, 350, 650, width=150, height=150)
+
+    os.remove(qr_path)
 
     y_position -= 1.5 * cm
 

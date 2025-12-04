@@ -91,3 +91,8 @@ def ans_matrix_val(img):
         # print()
         return_mat.append(temp_col_values)
     return return_mat
+
+def qr_decoder(img):
+    detector = cv2.QRCodeDetector()
+    data, points, _ = detector.detectAndDecode(img)
+    return data
