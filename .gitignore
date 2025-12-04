@@ -1,6 +1,5 @@
 venv/
 img/
-grade_processor/__pycache__
-smartgrader_app/accounts/__pycache__
-smartgrader_app/smartgrader_app/__pycache__
-smartgrader_app/.env
+__pycache__/
+*.pyc
+*.env
