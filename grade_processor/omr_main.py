@@ -3,6 +3,7 @@ import numpy as np
 import utils
 
 path = "../img/test2.png"
+json = "../pdf_generator/questions.json"
 imgWidth = 550
 imgHeight = 700
 img_og = cv2.imread(path)
@@ -29,7 +30,7 @@ rect_threshold = cv2.threshold(rect, 150, 255, cv2.THRESH_BINARY_INV)[1]
 # cv2.imshow("contours", img_contours)
 # cv2.imshow("answers", rect)
 cv2.imshow("answers_threshold", rect_threshold)
-cv2.imshow("answers_first_row", utils.split_rows(rect_threshold)[19])
+cv2.imshow("answers_first_row", utils.split_rows(rect_threshold, json)[19])
 # cv2.imshow("answer[0][0]", utils.ans_matrix(rect_threshold)[0][0])
 # utils.ans_matrix_val(rect_threshold)
 

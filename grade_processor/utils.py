@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-
+import json
 
 # Function to order points clockwise: top-left, top-right, bottom-right, bottom-left
 def order_points(pts):
@@ -63,15 +63,21 @@ def find_rect(contours, img_original):
     else:
         print("No rectangle found!")
         
-def split_rows(img):
-    rows = np.vsplit(img, 20)
+def split_rows(img, json_file):
+    with open(json_file, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    num_questions = data['num_questions']
+    rows = np.vsplit(img, num_questions)
     return rows
 
-def ans_matrix(img):
+def ans_matrix(img, json_file):
+    with open(json_file, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    num_answers = data['num_answers']
     matrix = []
     rows = split_rows(img)
     for row in rows:
-        col = np.hsplit(row, 5)
+        col = np.hsplit(row, num_answers)
         matrix.append(col)
     return matrix
 
