@@ -42,7 +42,34 @@ DB_PASSWORD=
 DB_HOST=
 DB_PORT=
 
+
+SAU:
+
+DB_NAME=neondb
+DB_USER=neondb_owner
+DB_PASSWORD=npg_wGshT06eAcJM
+DB_HOST=ep-morning-hall-a9jes6pw-pooler.gwc.azure.neon.tech
+DB_PORT=5432
+DB_SSL=require
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT'),
+        'OPTIONS': {
+            'sslmode': config('DB_SSL', default='require'),
+        }
+    }
+}
+(BAZA DE DATE HOSTATA GRATIS ASTA E DOAR DE TEST)
+
+
 In proiectul django:
 
 python manage.py makemigrations
 python manage.py migrate
+
