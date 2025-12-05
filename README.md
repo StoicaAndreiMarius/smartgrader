@@ -25,7 +25,7 @@ pip install -r requirements.txt
 
 
 
-Pentru DB:
+Pentru DB daca vrei local:
 
 Instalare postgre: https://www.postgresql.org/download/
 
@@ -35,16 +35,24 @@ Click dreapta pe Login/Group Roles -> general (name: nume_user), definition: (pa
 Click dreapta pe Databases -> create: general (database: nume_db) (owner: nume_user_creat)
 
 In .env trebuie setate:
-
+SECRET_KEY=
+DEBUG=True
 DB_NAME=
 DB_USER=
 DB_PASSWORD=
 DB_HOST=
 DB_PORT=
 
+python manage.py makemigrations
+python manage.py migrate
 
-SAU:
 
+
+Daca nu vrei local ci baza de date hostata gratis pe neon ceva:
+
+in .env:
+SECRET_KEY=
+DEBUG=TRUE
 DB_NAME=neondb
 DB_USER=neondb_owner
 DB_PASSWORD=npg_wGshT06eAcJM
@@ -52,6 +60,7 @@ DB_HOST=ep-morning-hall-a9jes6pw-pooler.gwc.azure.neon.tech
 DB_PORT=5432
 DB_SSL=require
 
+in settings.py:
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -66,9 +75,6 @@ DATABASES = {
     }
 }
 (BAZA DE DATE HOSTATA GRATIS ASTA E DOAR DE TEST)
-
-
-In proiectul django:
 
 python manage.py makemigrations
 python manage.py migrate
