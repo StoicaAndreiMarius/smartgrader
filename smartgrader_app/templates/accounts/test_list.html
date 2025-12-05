@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Tests - SmartGrader{% endblock %}
+
+{% block content %}
+<style>
+    .test-list-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+
+    .test-list-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .test-list-header h1 {
+        color: #333;
+    }
+
+    .create-test-btn {
+        background: #69c8a0;
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 4px;
+        text-decoration: none;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .create-test-btn:hover {
+        background: #58b38e;
+    }
+
+    .test-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+
+    .test-card {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+    }
+
+    .test-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .test-card h3 {
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .test-card p {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    .test-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #eee;
+    }
+
+    .test-meta-item {
+        font-size: 13px;
+        color: #888;
+    }
+
+    .no-tests {
+        text-align: center;
+        padding: 60px 20px;
+        color: #666;
+    }
+
+    .no-tests h2 {
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="test-list-container">
+    <div class="test-list-header">
+        <h1>My Tests</h1>
+        <a href="{% url 'test-generator' %}" class="create-test-btn">+ Create New Test</a>
+    </div>
+
+    {% if tests %}
+        <div class="test-grid">
+            {% for test in tests %}
+                <div class="test-card">
+                    <h3>{{ test.title }}</h3>
+                    {% if test.description %}
+                        <p>{{ test.description|truncatewords:20 }}</p>
+                    {% endif %}
+                    <div class="test-meta">
+                        <span class="test-meta-item">{{ test.num_questions }} questions</span>
+                        <span class="test-meta-item">{{ test.created_at|date:"M d, Y" }}</span>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="no-tests">
+            <h2>No tests yet</h2>
+            <p>Create your first test to get started!</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
