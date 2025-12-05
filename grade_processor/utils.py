@@ -63,27 +63,26 @@ def find_rect(contours, img_original):
     else:
         print("No rectangle found!")
         
-def split_rows(img, json_file):
-    with open(json_file, 'r', encoding='utf-8') as f:
-        data = json.load(f)
-    num_questions = data['num_questions']
+def split_rows(img, num_questions):
     rows = np.vsplit(img, num_questions)
     return rows
 
-def ans_matrix(img, json_file):
-    with open(json_file, 'r', encoding='utf-8') as f:
-        data = json.load(f)
-    num_answers = data['num_answers']
+def ans_matrix(img, num_answers, num_questions):
     matrix = []
-    rows = split_rows(img)
+    rows = split_rows(img, num_questions)
     for row in rows:
         col = np.hsplit(row, num_answers)
         matrix.append(col)
     return matrix
 
-def ans_matrix_val(img):
+def ans_matrix_val(img, json_file):
+    with open(json_file, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+
+    num_answers=data['num_answers']
+    num_questions=data['num_questions']
     return_mat = []
-    matrix = ans_matrix(img)
+    matrix = ans_matrix(img, num_answers, num_questions)
     for row in matrix:
         temp_col_values = []
         for col in row:

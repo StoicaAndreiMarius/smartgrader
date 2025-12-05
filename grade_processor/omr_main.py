@@ -30,11 +30,10 @@ rect_threshold = cv2.threshold(rect, 150, 255, cv2.THRESH_BINARY_INV)[1]
 # cv2.imshow("contours", img_contours)
 # cv2.imshow("answers", rect)
 cv2.imshow("answers_threshold", rect_threshold)
-cv2.imshow("answers_first_row", utils.split_rows(rect_threshold, json)[19])
 # cv2.imshow("answer[0][0]", utils.ans_matrix(rect_threshold)[0][0])
 # utils.ans_matrix_val(rect_threshold)
 
-ans_matrix = utils.ans_matrix_val(rect_threshold)
+ans_matrix = utils.ans_matrix_val(rect_threshold, json)
 cnt = 1
 for row in ans_matrix:
     print(f"{cnt}. ", end="")

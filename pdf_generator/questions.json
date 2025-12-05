@@ -1,0 +1,89 @@
+{
+  "id": 101,
+  "title": "Test Matematică — 18 întrebări",
+  "num_questions": 10,
+  "varianta": "A",
+  "num_answers": 4,
+  "questions": [
+    {
+      "id": 1,
+      "text": "Care este rezultatul expresiei: 3 × (4 + 2) − 5?",
+      "img": null,
+      "correct_answer": "1",
+      "options": ["11", "13", "17", "7"],
+      "points": 5
+    },
+    {
+      "id": 2,
+      "text": "Rezultatul împărțirii 84 ÷ 7 este:",
+      "img": null,
+      "correct_answer": "3",
+      "options": ["10", "14", "9", "12"],
+      "points": 5
+    },
+    {
+      "id": 3,
+      "text": "Cât este 2³ + 5²?",
+      "img": null,
+      "correct_answer": "2",
+      "options": ["29", "30", "33", "39"],
+      "points": 5
+    },
+    {
+      "id": 4,
+      "text": "Dacă x + 8 = 21, atunci valoarea lui x este:",
+      "img": null,
+      "correct_answer": "3",
+      "options": ["10", "11", "14", "13"],
+      "points": 5
+    },
+    {
+      "id": 5,
+      "text": "Perimetrul unui pătrat cu latura de 9 cm este:",
+      "img": null,
+      "correct_answer": "1",
+      "options": ["18 cm", "36 cm", "27 cm", "81 cm"],
+      "points": 5
+    },
+    {
+      "id": 6,
+      "text": "Cât este 25% din 160?",
+      "img": null,
+      "correct_answer": "0",
+      "options": ["40", "25", "32", "45"],
+      "points": 5
+    },
+    {
+      "id": 7,
+      "text": "Aria unui dreptunghi de 12 cm lungime și 5 cm lățime este:",
+      "img": null,
+      "correct_answer": "2",
+      "options": ["50 cm²", "20 cm²", "60 cm²", "100 cm²"],
+      "points": 5
+    },
+    {
+      "id": 8,
+      "text": "Cât este √144?",
+      "img": null,
+      "correct_answer": "3",
+      "options": ["10", "11", "14", "12"],
+      "points": 5
+    },
+    {
+      "id": 9,
+      "text": "Care este media aritmetică a numerelor 6, 8 și 10?",
+      "img": null,
+      "correct_answer": "0",
+      "options": ["8", "6", "9", "7"],
+      "points": 5
+    },
+    {
+      "id": 10,
+      "text": "Un unghi drept are:",
+      "img": null,
+      "correct_answer": "1",
+      "options": ["45°", "90°", "180°", "60°"],
+      "points": 5
+    }
+  ]
+}
