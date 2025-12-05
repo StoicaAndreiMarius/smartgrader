@@ -34,6 +34,9 @@ Click dreapta pe Login/Group Roles -> general (name: nume_user), definition: (pa
 
 Click dreapta pe Databases -> create: general (database: nume_db) (owner: nume_user_creat)
 
+Pentru generare secret_key nou: 
+python3 -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'
+
 In .env trebuie setate:
 SECRET_KEY=
 DEBUG=True
