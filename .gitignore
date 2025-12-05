@@ -3,6 +3,3 @@ img/
 __pycache__/
 *.pyc
 *.env
-*.db
-*.sqlite3
-db.sqlite3
