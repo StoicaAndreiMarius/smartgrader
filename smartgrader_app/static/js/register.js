@@ -6,7 +6,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
     const confirmPassword = document.getElementById("confirm_password").value;
 
     if (password !== confirmPassword) {
-        document.getElementById("error").innerText = "Parolele nu coincid!";
+        document.getElementById("error").innerText = "Passwords do not match";
         return;
     }
 
