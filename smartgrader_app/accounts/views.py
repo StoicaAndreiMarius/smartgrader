@@ -10,6 +10,14 @@ User = get_user_model()
 def landing(request):
     return render(request, 'accounts/landing.html')
 
+
+def login_page(request):
+    return render(request, 'accounts/login.html')
+
+def register_page(request):
+    return render(request, 'accounts/register.html')
+
+
 @csrf_exempt
 def register_user(request):
     if request.method != "POST":
