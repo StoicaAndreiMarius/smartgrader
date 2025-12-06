@@ -42,4 +42,6 @@ for row in ans_matrix:
         print(col, end=" ")
     print()
 
+print(utils.qr_decoder(img_og))
+
 cv2.waitKey(0)

@@ -42,7 +42,7 @@ def find_rect(contours, img_original):
         # Calculate width and height of the rectangle
         (tl, tr, br, bl) = rect
         
-        output_width = 550
+        output_width = 600
         output_height = 700
         
         # Define destination points for the rectangle
@@ -73,6 +73,8 @@ def ans_matrix(img, num_answers, num_questions):
     for row in rows:
         col = np.hsplit(row, num_answers)
         matrix.append(col)
+        # cv2.imshow("row", row)
+        # cv2.waitKey(0)
     return matrix
 
 def ans_matrix_val(img, json_file):
