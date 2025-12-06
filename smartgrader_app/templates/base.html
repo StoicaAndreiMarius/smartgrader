@@ -1,13 +1,22 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="height: 100%;">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/register_form.css' %}">
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login_form.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
     <title>{% block title %}SmartGrader{% endblock %}</title>
 </head>
-<body>
+<body style="display: flex;flex-direction: column; height: 100%; background-color: #1c1c1c;">
     {% include 'components/navbar.html' %}
+    {% block content %}{% endblock %}
+    {% include 'components/footer.html' %}
 </body>
 </html>

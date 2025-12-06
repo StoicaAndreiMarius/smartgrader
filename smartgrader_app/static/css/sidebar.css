@@ -1,53 +1,73 @@
+/* Ensure your variables are defined in :root (as you provided) */
+
 .sidebar {
-    width: 230px;
-    height: 100vh;
-    background: #222;
-    padding: 25px 15px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    border-radius: 0 20px 20px 0;
+    /* Layout & Sizing */
+    width: 260px;
+    height: auto; 
+    top: 2.5vh;
+    left: 20px;
     display: flex;
     flex-direction: column;
-    gap: 30px;
-    color: white;
-    transition: transform 0.3s ease;
+    justify-content: space-between; /* Pushes top and bottom sections apart */
+    
+    /* Appearance */
+    background-color: #1a1d24; /* A specific dark slate to match your image exactly */
+    /* OR use your variable: background-color: var(--card-background); */
+    
+    margin-top: 2em;
+    border-radius: 20px; /* Rounded corners as seen in image */
+    padding: 30px 20px;
+    box-sizing: border-box;
+    
+    /* Optional: Soft shadow for depth */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.sidebar-header {
-    font-size: 22px;
-    font-weight: bold;
-}
-
-.sidebar-menu {
+/* Remove default list styles */
+.sidebar .nav-list {
     list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Link Styling */
+.sidebar .nav-link {
     display: flex;
-    flex-direction: column;
-    gap: 18px;
-}
-
-.sidebar-menu li a {
+    align-items: center;
+    color: var(--text-light);
     text-decoration: none;
-    color: #ddd;
-    font-size: 16px;
-    padding: 8px 10px;
-    display: block;
-    border-radius: 8px;
-    transition: 0.2s;
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
 }
 
-.sidebar-menu li a:hover {
-    background: #69c8a0;
-    color: #000;
+/* Icon Styling */
+.sidebar .nav-link i {
+    font-size: 1.4rem;
+    margin-right: 15px;
+    color: var(--text-light); /* Icons default to white */
+    transition: color 0.3s ease;
 }
 
-@media (max-width: 900px) {
+/* Hover State */
+.sidebar .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.05); /* Subtle hover background */
+    color: var(--primary-color);
+}
 
-    .sidebar {
-        transform: translateX(-100%);
-    }
+.sidebar .nav-link:hover i {
+    color: var(--primary-color);
+}
 
-    .sidebar.open {
-        transform: translateX(0);
-    }
+/* Active State (for the current page) */
+.sidebar .nav-link.active {
+    color: var(--primary-color);
+}
+
+.sidebar .nav-link.active i {
+    color: var(--primary-color);
 }

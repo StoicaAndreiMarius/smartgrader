@@ -1,12 +1,12 @@
-
+{% load static %}
 <nav class="navbar">
     <div class="logo-section">
-        <img src="https://cdn-icons-png.flaticon.com/512/1828/1828784.png" alt="Logo" class="logo">
+        <img src="{% static 'img/Logo.png' %}" alt="Logo" class="logo">
         <span class="brand">SmartGrader</span>
     </div>
 
     <ul class="menu">
-        <li><a href="#">Sign Up</a></li>
-        <li><a href="#" class="login-btn">Login</a></li>
+        <li><a href="{% url 'register' %}" class="signup-btn">Sign Up</a></li>
+        <li><a href="{% url 'login' %}" class="login-btn">Login</a></li>
     </ul>
 </nav>

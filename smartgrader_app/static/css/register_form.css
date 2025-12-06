@@ -1,0 +1,103 @@
+@import url('variables.css');
+
+/* --- Component Container Styling --- */
+.register-form-card {
+    /* Style the outer wrapper to resemble the dark card */
+    background-color: var(--card-background);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); 
+    width: 350px; /* Set a fixed width for the card */
+    box-sizing: border-box;
+    border: 1px solid var(--border-color);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-light);
+}
+
+.register-form-card h2 {
+    text-align: center;
+    color: var(--primary-color);
+    margin-top: 0;
+    margin-bottom: 30px;
+    font-size: 1.8em;
+    font-weight: 400;
+}
+
+/* --- Label Styling --- */
+.form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+    color: var(--text-secondary);
+}
+
+/* --- Input Field Styling --- */
+.input-field {
+    width: 100%;
+    padding: 10px;
+    margin: 0;
+    box-sizing: border-box;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--background-dark);
+    color: var(--text-light);
+    font-size: 1em;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 1px var(--primary-color);
+}
+
+/* The <br><br> tags in the original HTML add extra space, which is handled here */
+
+/* --- Button Styling --- */
+.submit-button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px; /* Less margin since <br> tags provide some already */
+    border: none;
+    border-radius: 4px;
+    background-color: var(--primary-color);
+    color: var(--background-dark); /* Dark text on the bright button */
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.submit-button:hover {
+    background-color: #00a37e; /* Slightly darker primary color on hover */
+}
+
+.submit-button:active {
+    transform: translateY(1px);
+}
+
+/* --- Error Message Styling --- */
+.error-message {
+    color: var(--error-color) !important; 
+    text-align: center;
+    margin-top: 15px;
+    font-size: 0.9em;
+}
+
+/* --- Footer Link Styling (for the "Already have an account?" text) --- */
+.footer-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9em;
+    color: var(--text-secondary);
+}
+
+.footer-link a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.footer-link a:hover {
+    text-decoration: underline;
+}

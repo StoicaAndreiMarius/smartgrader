@@ -1,19 +1,25 @@
 {% load static %}
-<h2>Register</h2>
+<div class="register-form-card">
+    <h2>Register</h2>
 
-<form id="registerForm">
-    <label>Email:</label><br>
-    <input type="email" id="email" required><br><br>
+    <form id="registerForm">
+        <label class="form-label" for="email">Email:</label><br>
+        <input class="input-field" type="email" id="email" required><br><br>
 
-    <label>Password:</label><br>
-    <input type="password" id="password" required><br><br>
+        <label class="form-label" for="password">Password:</label><br>
+        <input class="input-field" type="password" id="password" required><br><br>
 
-    <label>Confirm Password:</label><br>
-    <input type="password" id="confirm_password" required><br><br>
+        <label class="form-label" for="confirm_password">Confirm Password:</label><br>
+        <input class="input-field" type="password" id="confirm_password" required><br><br>
 
-    <button type="submit">Register</button>
-</form>
+        <button class="submit-button" type="submit">Register</button>
+    </form>
+    
+    <div class="footer-link">
+        Already have an account? <a href="{% url 'login' %}">Log in.</a>
+    </div>
 
-<p id="error" style="color:red;"></p>
+    <p id="error" class="error-message"></p>
 
- <script src="{% static 'js/register.js' %}"></script>
+    <script src="{% static 'js/register.js' %}"></script>
+</div>

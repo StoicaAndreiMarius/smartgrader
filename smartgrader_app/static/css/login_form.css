@@ -1,0 +1,105 @@
+@import url('variables.css');
+
+.login-form-card {
+    background-color: var(--card-background);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); 
+    width: 350px; 
+    box-sizing: border-box;
+    border: 1px solid var(--border-color);
+    font-family: var(--font-stack);
+    color: var(--text-light);
+}
+
+.login-form-card h2 {
+    text-align: center;
+    color: var(--primary-color);
+    margin-top: 0;
+    margin-bottom: 30px;
+    font-size: 1.8em;
+    font-weight: 400;
+}
+
+/* --- Input Group for consistent spacing around input/label pairs --- */
+.input-group {
+    margin-bottom: 20px;
+}
+
+/* --- Label Styling --- */
+.form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+    color: var(--text-secondary);
+}
+
+/* --- Input Field Styling --- */
+.input-field {
+    width: 100%;
+    padding: 10px;
+    margin: 0;
+    box-sizing: border-box;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--background-dark);
+    color: var(--text-light);
+    font-size: 1em;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 1px var(--primary-color);
+}
+
+/* --- Button Styling --- */
+.submit-button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--primary-color);
+    color: var(--background-dark); 
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.submit-button:hover {
+    background-color: #00a37e; 
+}
+
+.submit-button:active {
+    transform: translateY(1px);
+}
+
+/* --- Error Message Styling --- */
+.error-message {
+    color: var(--error-color) !important; 
+    text-align: center;
+    margin-top: 15px;
+    font-size: 0.9em;
+    min-height: 1.2em; /* Reserves space */
+}
+
+/* --- Footer Link Styling (for the "Don't have an account?" text) --- */
+.footer-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9em;
+    color: var(--text-secondary);
+}
+
+.footer-link a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.footer-link a:hover {
+    text-decoration: underline;
+}
