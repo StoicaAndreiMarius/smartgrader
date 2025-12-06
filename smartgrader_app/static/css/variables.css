@@ -1,0 +1,10 @@
+/* --- Variables for easy theming --- */
+:root {
+    --primary-color: #00bf8f; /* Bright Teal/Green from the mockup */
+    --background-dark: #1e1e1e; /* Dark background (if container is displayed) */
+    --card-background: #252526; /* Slightly lighter card background */
+    --text-light: #f1f1f1; /* Light text color */
+    --text-secondary: #aaaaaa; /* Subdued text color for labels */
+    --border-color: #3e3e3e; /* Subtle border color */
+    --error-color: #ff6347; /* Tomato red for errors */
+}

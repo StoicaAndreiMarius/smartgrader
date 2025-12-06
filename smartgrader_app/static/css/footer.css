@@ -1,0 +1,71 @@
+@import url('variables.css');
+
+.app-footer {
+    /* Use a darker background color for a heavier appearance */
+    background-color: var(--footer-dark-bg, #1c1c1c); 
+    padding: 15px 0; /* Reduced padding for a thinner look */
+    font-family: var(--font-stack, sans-serif);
+    /* Remove the top border to simplify the look */
+    border-top: none; 
+    width: 100%;
+    box-sizing: border-box;
+    flex-shrink: 0; 
+}
+
+/* --- Content Wrapper (Uses Flexbox for distribution) --- */
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px; /* Increased side padding for a cleaner edge */
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    gap: 10px;
+    flex-direction: column;
+}
+
+/* --- 1. Left Section: Logo & Brand Name --- */
+.footer-brand {
+    display: flex;
+    align-items: center;
+    color: var(--primary-color); /* Teal/Green color for brand name */
+    font-size: 1.0em;
+    font-weight: 600;
+}
+
+.footer-logo-icon {
+    font-size: 1.2em; 
+    margin-right: 8px;
+    color: var(--primary-color); /* Ensure icon is teal */
+}
+
+.footer-app-name {
+    /* Standard text color, only the icon is fully colored in the screenshot */
+    color: var(--text-light, #f1f1f1); 
+    letter-spacing: 0.5px;
+}
+
+/* --- 2. Middle Section: Navigation/Links --- */
+.footer-links {
+    display: flex;
+    gap: 25px; /* Spacing between links */
+}
+
+.footer-link-item {
+    /* Use the subtle secondary text color for links */
+    color: var(--text-secondary, #aaaaaa); 
+    text-decoration: none;
+    font-size: 0.85em; /* Smaller font size */
+    transition: color 0.2s;
+}
+
+.footer-link-item:hover {
+    color: var(--primary-color);
+    text-decoration: none; /* Removed underline on hover for a cleaner look */
+}
+
+/* --- 3. Right Section: Copyright/Year --- */
+.footer-copyright {
+    color: var(--text-secondary, #aaaaaa);
+    font-size: 0.85em;
+}

@@ -1,16 +1,26 @@
-{% load static %}
-<h2>Login</h2>
+<div class="login-form-card"> 
+    {% load static %}
+    <h2>Login</h2>
 
-<form id="loginForm"> 
-    <label>Email:</label> <br> 
-    <input type="email" id="email" required> <br><br>
+    <form id="loginForm"> 
+        <div class="input-group"> 
+            <label class="form-label" for="email">Email:</label>
+            <input class="input-field" type="email" id="email" required>
+        </div>
 
-    <label>Password:</label> <br> 
-    <input type="password" id="password" required> <br><br> 
-    
-    <button type="submit">Login</button>
-</form>
+        <div class="input-group"> 
+            <label class="form-label" for="password">Password:</label>
+            <input class="input-field" type="password" id="password" required>
+        </div>
+        
+        <p id="error" class="error-message"></p>
 
-<p id="error" style="color:red;"></p>
+        <button class="submit-button" type="submit">Login</button>
+    </form>
 
-<script src="{% static 'js/login.js' %}"></script>
+    <div class="footer-link">
+        Don't have an account? <a href="{% url 'register' %}">Register now.</a>
+    </div>
+
+    <script src="{% static 'js/login.js' %}"></script>
+</div>

@@ -1,15 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-</head>
+{% extends 'base.html' %}
 
-<body>
+{% block title %} SmartGrader - Login {% endblock %}
 
-    {% include 'components/login_form.html' %}
-
-</body>
-
-</html>
+{% block content %}
+    <main style="display: flex; justify-content: center; align-items: center; flex-grow: 1;">
+        {% include 'components/login_form.html' %}
+    </main>
+{% endblock %}
