@@ -69,3 +69,26 @@
     color: var(--text-secondary, #aaaaaa);
     font-size: 0.85em;
 }
+
+@media (max-width: 900px) {
+    .footer-content {
+        padding: 0 24px;
+    }
+}
+
+@media (max-width: 640px) {
+    .footer-content {
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+    .footer-links {
+        flex-wrap: wrap;
+        gap: 12px 18px;
+    }
+
+    .footer-link-item,
+    .footer-copyright {
+        font-size: 0.9em;
+    }
+}
