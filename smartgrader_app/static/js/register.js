@@ -60,7 +60,7 @@ document.getElementById('registerForm').addEventListener('submit', async functio
             successDiv.style.display = 'block';
             setTimeout(() => {
                 if (role === 'teacher') {
-                    window.location.href = '/tests/';
+                    window.location.href = '/';
                 } else {
                     window.location.href = '/';
                 }

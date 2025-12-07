@@ -1,0 +1,105 @@
+﻿{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Test Detail - SmartGrader{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'test_generator/css/test_detail.css' %}">
+<div class="test-detail-page">
+    <header class="detail-header">
+        <div>
+            <p class="eyebrow">Test ID: {{ test.id }}</p>
+            <h1>{{ test.title }}</h1>
+            {% if test.description %}<p class="description">{{ test.description }}</p>{% endif %}
+            <div class="meta-row">
+                <span>{{ test.num_questions }} questions</span>
+                <span>{{ test.num_answers }} options each</span>
+                <span>Created: {{ test.created_at }}</span>
+                <span>Submissions: {{ test.submission_count }}</span>
+            </div>
+        </div>
+        <div class="detail-actions">
+            <button class="btn btn-primary" data-open="test-generator">Generate New</button>
+            <button class="btn btn-secondary" onclick="window.history.back()">Back</button>
+        </div>
+    </header>
+
+    <section class="detail-grid">
+        <div class="panel">
+            <h2>Performance</h2>
+            <div class="stat-blocks">
+                <div class="stat-block">
+                    <div class="stat-value">{{ test.submission_count }}</div>
+                    <div class="stat-label">Submissions</div>
+                </div>
+                <div class="stat-block">
+                    <div class="stat-value">{{ test.average_percentage }}%</div>
+                    <div class="stat-label">Average</div>
+                </div>
+                <div class="stat-block">
+                    {% if test.latest_submission %}
+                    <div class="stat-value">{{ test.latest_submission.student }}</div>
+                    <div class="stat-label">Latest: {{ test.latest_submission.percentage }}%</div>
+                    {% else %}
+                    <div class="stat-value">--</div>
+                    <div class="stat-label">No submissions</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>Recent Submissions</h2>
+            <div class="table">
+                <div class="table-head">
+                    <span>Student</span>
+                    <span>Score</span>
+                    <span>Submitted</span>
+                </div>
+                {% for sub in submissions %}
+                <div class="table-row">
+                    <span>{{ sub.student }}</span>
+                    <span>{{ sub.percentage }}% ({{ sub.score }} pts)</span>
+                    <span>{{ sub.submitted_at }}</span>
+                </div>
+                {% empty %}
+                <div class="table-row muted">No submissions yet.</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>Questions</h2>
+            <ol class="questions-list">
+                {% for q in questions %}
+                <li>
+                    <div class="q-text">{{ q.text }}</div>
+                    {% if q.img %}
+                    <div class="q-img"><img src="{{ q.img }}" alt="Question image"></div>
+                    {% endif %}
+                    <ul class="options-list">
+                        {% for opt in q.options %}
+                        {% with letter="ABCDEFGHIJKLMNOPQRSTUVWXYZ"|slice:forloop.counter0|stringformat:"s" %}
+                        <li class="{% if forloop.counter0 == q.correct_index %}correct{% endif %}">
+                            <span class="opt-label">{{ letter }}</span>
+                            <span class="opt-text">{{ opt }}</span>
+                            {% if forloop.counter0 == q.correct_index %}<span class="badge">Correct</span>{% endif %}
+                        </li>
+                        {% endwith %}
+                        {% endfor %}
+                    </ul>
+                    <div class="q-answer">Points: {{ q.points }}</div>
+                </li>
+                {% empty %}
+                <li class="muted">No questions available.</li>
+                {% endfor %}
+            </ol>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'test_generator/js/test_generator.js' %}"></script>
+<script src="{% static 'test_generator/js/test_detail.js' %}"></script>
+{% endblock %}

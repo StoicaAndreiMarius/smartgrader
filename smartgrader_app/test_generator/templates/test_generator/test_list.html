@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Tests - SmartGrader{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'test_generator/css/test_list.css' %}">
+<div class="tests-page">
+    <div class="tests-header">
+        <div>
+            <h1>Tests</h1>
+            <p>View, filter, and open your generated tests.</p>
+        </div>
+        <div class="tests-actions">
+            <button class="btn btn-primary" data-open="test-generator">+ New Test</button>
+        </div>
+    </div>
+
+    <div class="filters-row">
+        <input id="search-tests" type="text" placeholder="Search tests by name or description">
+        <select id="sort-tests">
+            <option value="date-desc">Newest first</option>
+            <option value="date-asc">Oldest first</option>
+            <option value="name-asc">Name A-Z</option>
+            <option value="name-desc">Name Z-A</option>
+            <option value="submissions-desc">Most submissions</option>
+            <option value="average-desc">Highest average</option>
+        </select>
+    </div>
+
+    <div id="test-grid" class="tests-grid"></div>
+</div>
+
+<script id="tests-data" type="application/json">{{ tests_json|safe }}</script>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'test_generator/js/test_list.js' %}"></script>
+<script src="{% static 'test_generator/js/test_generator.js' %}"></script>
+{% endblock %}

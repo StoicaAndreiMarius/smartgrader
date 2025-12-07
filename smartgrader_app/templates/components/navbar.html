@@ -1,9 +1,10 @@
 {% load static %}
+<link rel="stylesheet" href="{% static 'css/navbar.css' %}">
 <nav class="navbar">
-    <div class="logo-section">
+    <a href="/" class="logo-section" aria-label="Go to home">
         <img src="{% static 'img/Logo.png' %}" alt="Logo" class="logo">
         <span class="brand">SmartGrader</span>
-    </div>
+    </a>
 
     <button class="nav-toggle" type="button" aria-expanded="false" aria-label="Toggle navigation">
         <i class='bx bx-menu'></i>

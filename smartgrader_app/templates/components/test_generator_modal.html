@@ -1,0 +1,12 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'test_generator/css/test_generator.css' %}">
+
+<div id="test-generator-modal" class="tg-overlay" hidden>
+    <div class="tg-overlay__backdrop" data-close="test-generator"></div>
+    <div class="tg-overlay__panel">
+        <button class="tg-overlay__close" data-close="test-generator" aria-label="Close test generator">&times;</button>
+        {% include 'test_generator/_test_generator_body.html' %}
+    </div>
+</div>
+
+<script src="{% static 'test_generator/js/test_generator.js' %}"></script>
