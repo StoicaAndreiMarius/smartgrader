@@ -49,3 +49,23 @@
     padding: 8px 16px;
     border-radius: 10px;
 }
+
+.user-chip {
+    font-family: sans-serif;
+    font-size: 15px;
+    color: #000;
+    background: rgba(0, 0, 0, 0.08);
+    padding: 6px 12px;
+    border-radius: 12px;
+}
+
+.logout-btn {
+    text-decoration: none;
+    font-family: sans-serif;
+    font-size: 16px;
+    color: #000;
+    background: #fff;
+    padding: 8px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+}
