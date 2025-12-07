@@ -1,0 +1,139 @@
+{
+  "id": 8,
+  "title": "Test (Variant 1)",
+  "num_questions": 10,
+  "num_answers": 4,
+  "varianta": 1,
+  "questions": [
+    {
+      "id": 1,
+      "text": "Cât este 5% din 200?",
+      "img": null,
+      "correct_answer": 3,
+      "options": [
+        "20",
+        "15",
+        "12",
+        "10"
+      ],
+      "points": 0
+    },
+    {
+      "id": 2,
+      "text": "√64 este:",
+      "img": null,
+      "correct_answer": 1,
+      "options": [
+        "6",
+        "8",
+        "10",
+        "12"
+      ],
+      "points": 0
+    },
+    {
+      "id": 3,
+      "text": "Dacă 5x = 40, atunci x este:",
+      "img": null,
+      "correct_answer": 2,
+      "options": [
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "points": 0
+    },
+    {
+      "id": 4,
+      "text": "Valorarea expresiei 2 × (15 − 4) este:",
+      "img": null,
+      "correct_answer": 2,
+      "options": [
+        "18",
+        "20",
+        "22",
+        "26"
+      ],
+      "points": 0
+    },
+    {
+      "id": 5,
+      "text": "Cât este 45 − 28?",
+      "img": null,
+      "correct_answer": 0,
+      "options": [
+        "17",
+        "13",
+        "18",
+        "16"
+      ],
+      "points": 0
+    },
+    {
+      "id": 6,
+      "text": "Cât este 8³?",
+      "img": null,
+      "correct_answer": 2,
+      "options": [
+        "400",
+        "448",
+        "512",
+        "520"
+      ],
+      "points": 0
+    },
+    {
+      "id": 7,
+      "text": "Perimetrul unui pătrat cu latura 15 cm este:",
+      "img": null,
+      "correct_answer": 0,
+      "options": [
+        "60 cm",
+        "45 cm",
+        "75 cm",
+        "30 cm"
+      ],
+      "points": 0
+    },
+    {
+      "id": 8,
+      "text": "Cât este 7 × 7?",
+      "img": null,
+      "correct_answer": 3,
+      "options": [
+        "45",
+        "46",
+        "47",
+        "49"
+      ],
+      "points": 0
+    },
+    {
+      "id": 9,
+      "text": "Media aritmetică a numerelor 2, 4, 6 și 8 este:",
+      "img": null,
+      "correct_answer": 0,
+      "options": [
+        "5",
+        "4",
+        "6",
+        "7"
+      ],
+      "points": 0
+    },
+    {
+      "id": 10,
+      "text": "Cât este 1/4 din 300?",
+      "img": null,
+      "correct_answer": 0,
+      "options": [
+        "75",
+        "50",
+        "60",
+        "90"
+      ],
+      "points": 0
+    }
+  ]
+}

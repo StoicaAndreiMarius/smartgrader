@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Test Generator - SmartGrader{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'test_generator/css/test_generator.css' %}">
+<div class="test-generator-page">
+    {% include 'test_generator/_test_generator_body.html' %}
+</div>
+{% endblock %}
+
+{# Avoid double-including the modal on this dedicated page #}
+{% block modals %}{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'test_generator/js/test_generator.js' %}"></script>
+{% endblock %}

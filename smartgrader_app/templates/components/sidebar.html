@@ -9,22 +9,24 @@
             </li>
             <li>
                 <a href="#" class="nav-link">
-                    <i class='bx bx-help-circle'></i>
-                    <span>Questions Page</span>
-                </a>
-            </li>
-            <li>
-                <a href="#" class="nav-link">
                     <i class='bx bx-check-shield'></i>
                     <span>Test Grader</span>
                 </a>
             </li>
+            {% if request.user.is_authenticated and request.user.profile.role == 'teacher' %}
             <li>
-                <a href="#" class="nav-link">
+                <a href="/tests/" class="nav-link">
+                    <i class='bx bx-grid-alt'></i>
+                    <span>Tests</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="nav-link" data-open="test-generator">
                     <i class='bx bx-file'></i>
                     <span>Test Generator</span>
                 </a>
             </li>
+            {% endif %}
         </ul>
     </div>
 

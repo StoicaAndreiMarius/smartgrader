@@ -1,0 +1,170 @@
+﻿.tests-page {
+    padding: 20px;
+}
+
+.tests-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.tests-header h1 {
+    color: #fff;
+    margin: 0 0 6px 0;
+    font-size: 22px;
+}
+
+.tests-header p {
+    color: #aaa;
+    margin: 0;
+    font-size: 13px;
+}
+
+.filters-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.filters-row input,
+.filters-row select {
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #444;
+    background: #1c1c1c;
+    color: #fff;
+    flex: 1;
+    font-size: 13px;
+}
+
+.filters-row select {
+    max-width: 200px;
+}
+
+.tests-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+}
+
+.test-card-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.test-card {
+    background: #222;
+    border: 1px solid #2f2f2f;
+    border-radius: 10px;
+    padding: 14px;
+    transition: transform 0.1s ease, box-shadow 0.15s ease;
+    min-height: 190px;
+}
+
+.test-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+}
+
+.test-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.test-card h3 {
+    margin: 0 0 8px 0;
+    color: #69c8a0;
+    font-size: 16px;
+}
+
+.test-card-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.test-card p {
+    margin: 0 0 10px 0;
+    color: #ddd;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.stats-box {
+    background: #1c1c1c;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.stats-row {
+    display: flex;
+    justify-content: space-between;
+    color: #ddd;
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    color: #aaa;
+}
+
+.stat-value {
+    color: #fff;
+    font-weight: 600;
+}
+
+.stat-secondary {
+    color: #8ac6ff;
+    font-size: 12px;
+}
+
+.no-stats {
+    color: #777;
+    font-size: 12px;
+}
+
+.test-meta {
+    display: flex;
+    justify-content: space-between;
+    color: #aaa;
+    font-size: 12px;
+}
+
+.tests-actions .btn {
+    padding: 8px 14px;
+    font-size: 13px;
+}
+
+.btn-danger {
+    background: #ff5252;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.btn-danger:hover {
+    background: #e64848;
+}
+
+.btn-tertiary {
+    background: #1c1c1c;
+    color: #fff;
+    border: 1px solid #2f2f2f;
+    border-radius: 6px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.btn-tertiary:hover {
+    border-color: #69c8a0;
+}

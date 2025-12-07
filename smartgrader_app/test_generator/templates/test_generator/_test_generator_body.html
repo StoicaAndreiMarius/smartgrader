@@ -1,0 +1,137 @@
+<div class="container test-generator">
+    <div class="header">
+        <h1>Create New Test</h1>
+        <p>Generate a customizable test for your students</p>
+    </div>
+
+    <form id="test-form">
+        <div class="form-section">
+            <h2>Test Information</h2>
+            <div class="form-group">
+                <label for="test-title">Test Title *</label>
+                <input type="text" id="test-title" name="title" placeholder="e.g., Mid-term Exam - Mathematics" required>
+            </div>
+
+            <div class="form-group">
+                <label for="test-description">Description (Optional)</label>
+                <textarea id="test-description" name="description" placeholder="Brief description of the test"></textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="num-options">Number of Options per Question *</label>
+                    <select id="num-options" name="num_options" required>
+                        <option value="3">3 Options (A, B, C)</option>
+                        <option value="4">4 Options (A, B, C, D)</option>
+                        <option value="5" selected>5 Options (A, B, C, D, E)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="section-header">
+                <h2>Import Questions</h2>
+            </div>
+
+            <div class="import-options">
+                <div class="import-group">
+                    <label for="file-upload" class="file-upload-label">
+                        <span>Upload CSV or JSON</span>
+                        <input type="file" id="file-upload" accept=".csv,.json" style="display: none;">
+                    </label>
+                    <button type="button" id="ai-generate-btn" class="btn btn-ai">
+                        AI Generate Questions
+                    </button>
+                </div>
+                <p class="import-hint">Upload a CSV or JSON file with questions, or add them manually below</p>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="section-header">
+                <h2>Questions</h2>
+                <button type="button" id="add-question-btn" class="btn btn-secondary">+ Add Question</button>
+            </div>
+
+            <div id="questions-container">
+                <!-- Questions will be added dynamically here -->
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="section-header">
+                <h2>Randomization Options</h2>
+            </div>
+
+            <div class="randomization-options">
+                <div class="form-group">
+                    <label for="num-variants">
+                        <input type="checkbox" id="enable-randomization" name="enable_randomization">
+                        Generate Multiple Test Variants
+                    </label>
+                </div>
+
+                <div id="randomization-settings" style="display: none;">
+                    <div class="form-group">
+                        <label for="num-variants">Number of Variants *</label>
+                        <input type="number" id="num-variants" name="num_variants" min="1" max="20" value="1" placeholder="e.g., 2">
+                        <small>Generate multiple randomized versions from your question pool</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="questions-per-variant">Questions per Variant *</label>
+                        <input type="number" id="questions-per-variant" name="questions_per_variant" min="1" placeholder="e.g., 10">
+                        <small>Number of questions in each test variant</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="button" id="cancel-btn" class="btn btn-cancel">Cancel</button>
+            <button type="submit" id="save-btn" class="btn btn-primary">Save Test</button>
+            <button type="button" id="save-and-generate-btn" class="btn btn-success">Save & Generate PDF</button>
+        </div>
+
+        <div id="error-message" class="error-message" style="display: none;"></div>
+        <div id="success-message" class="success-message" style="display: none;"></div>
+    </form>
+
+    <!-- AI Generation Modal -->
+    <div id="ai-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>AI Generate Questions</h2>
+                <button class="modal-close" id="ai-modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="ai-topic">Topic *</label>
+                    <input type="text" id="ai-topic" placeholder="e.g., World War II, Photosynthesis, JavaScript Arrays">
+                </div>
+                <div class="form-group">
+                    <label for="ai-num-questions">Number of Questions *</label>
+                    <input type="number" id="ai-num-questions" min="1" max="50" value="10">
+                </div>
+                <div class="form-group">
+                    <label for="ai-difficulty">Difficulty Level *</label>
+                    <select id="ai-difficulty">
+                        <option value="easy">Easy</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+                <div id="ai-error" class="error-message" style="display: none;"></div>
+                <div id="ai-loading" class="loading-message" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Generating questions with AI... This may take a moment.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-cancel" id="ai-cancel">Cancel</button>
+                <button type="button" class="btn btn-primary" id="ai-generate">Generate</button>
+            </div>
+        </div>
+    </div>
+</div>

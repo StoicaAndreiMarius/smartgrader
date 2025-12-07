@@ -1,25 +1,63 @@
 {% load static %}
-<div class="register-form-card">
-    <h2>Register</h2>
 
-    <form id="registerForm">
-        <label class="form-label" for="email">Email:</label><br>
-        <input class="input-field" type="email" id="email" required><br><br>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/register_form.css' %}">
+<style>
+    /* Center the card just like your original standalone page */
+    .center-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 80vh;
+    }
+</style>
+{% endblock %}
 
-        <label class="form-label" for="password">Password:</label><br>
-        <input class="input-field" type="password" id="password" required><br><br>
+{% block content %}
 
-        <label class="form-label" for="confirm_password">Confirm Password:</label><br>
-        <input class="input-field" type="password" id="confirm_password" required><br><br>
+<div class="center-wrapper">
+    <div class="register-form-card">
+        <h2>Create Account</h2>
 
-        <button class="submit-button" type="submit">Register</button>
-    </form>
-    
-    <div class="footer-link">
-        Already have an account? <a href="{% url 'login' %}">Log in.</a>
+        <form id="registerForm">
+
+            <label class="form-label" for="role">I am a...</label>
+            <select class="input-field" id="role" name="role" required>
+                <option value="student">Student</option>
+                <option value="teacher">Teacher</option>
+            </select>
+            <br><br>
+
+            <label class="form-label" for="first-name">First Name:</label>
+            <input class="input-field" type="text" id="first-name" name="first-name" required>
+            <br><br>
+
+            <label class="form-label" for="last-name">Last Name:</label>
+            <input class="input-field" type="text" id="last-name" name="last-name" required>
+            <br><br>
+
+            <label class="form-label" for="email">Email:</label>
+            <input class="input-field" type="email" id="email" name="email" required>
+            <br><br>
+
+            <label class="form-label" for="password">Password:</label>
+            <input class="input-field" type="password" id="password" name="password" minlength="8" required>
+            <br><br>
+
+            <label class="form-label" for="confirm_password">Confirm Password:</label>
+            <input class="input-field" type="password" id="confirm_password" name="confirm_password" minlength="8" required>
+
+            <button class="submit-button" type="submit">Create Account</button>
+        </form>
+
+        <div class="footer-link">
+            Already have an account? <a href="{% url 'login' %}">Log in.</a>
+        </div>
+
+        <p id="error" class="error-message"></p>
+
+        <script src="{% static 'js/register.js' %}"></script>
     </div>
-
-    <p id="error" class="error-message"></p>
-
-    <script src="{% static 'js/register.js' %}"></script>
 </div>
+
+{% endblock %}

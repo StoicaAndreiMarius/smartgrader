@@ -1,17 +1,23 @@
 {% load static %}
+<link rel="stylesheet" href="{% static 'css/navbar.css' %}">
 <nav class="navbar">
-    <div class="logo-section">
+    <a href="/" class="logo-section" aria-label="Go to home">
         <img src="{% static 'img/Logo.png' %}" alt="Logo" class="logo">
         <span class="brand">SmartGrader</span>
-    </div>
+    </a>
 
     <button class="nav-toggle" type="button" aria-expanded="false" aria-label="Toggle navigation">
         <i class='bx bx-menu'></i>
     </button>
 
     <ul class="menu">
-        <li><a href="{% url 'register' %}" class="signup-btn">Sign Up</a></li>
-        <li><a href="{% url 'login' %}" class="login-btn">Login</a></li>
+        {% if request.user.is_authenticated %}
+            <li class="user-chip">Hi, {{ request.user.email }}</li>
+            <li><a href="{% url 'logout' %}" class="logout-btn">Logout</a></li>
+        {% else %}
+            <li><a href="{% url 'register' %}" class="signup-btn">Sign Up</a></li>
+            <li><a href="{% url 'login' %}" class="login-btn">Login</a></li>
+        {% endif %}
     </ul>
 </nav>
 
