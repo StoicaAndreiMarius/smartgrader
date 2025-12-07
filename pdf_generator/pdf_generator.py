@@ -1,19 +1,28 @@
 import json
+import os
+from pathlib import Path
+
+import qrcode
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
-from reportlab.pdfgen import canvas
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-import qrcode
-import os
+from reportlab.pdfgen import canvas
+
+
+def _font_paths():
+    base_dir = Path(__file__).resolve().parent.parent
+    return (
+        base_dir / "fonts" / "arial.ttf",
+        base_dir / "fonts" / "arialbd.ttf",
+    )
 
 
 def draw_question_with_options(c, question, y_position, margin, width, font_regular, font_bold):
-
     c.setFont(font_bold, 10)
     question_text = f"{question['id']}. {question['text']}"
 
-    if question['img']:
+    if question.get("img"):
         question_text += " (Vezi imaginea)"
 
     lines = []
@@ -39,7 +48,7 @@ def draw_question_with_options(c, question, y_position, margin, width, font_regu
     y_position -= 0.3 * cm
 
     c.setFont(font_regular, 10)
-    for i, option in enumerate(question['options']):
+    for i, option in enumerate(question.get("options", [])):
         letter = chr(65 + i)
 
         circle_x = margin + 0.5 * cm
@@ -59,17 +68,19 @@ def draw_question_with_options(c, question, y_position, margin, width, font_regu
     return y_position
 
 
+def _register_fonts():
+    regular_path, bold_path = _font_paths()
+    pdfmetrics.registerFont(TTFont("Arial", str(regular_path)))
+    pdfmetrics.registerFont(TTFont("Arial-Bold", str(bold_path)))
+    return "Arial", "Arial-Bold"
+
+
 def generate_test_pdf(json_file, output_pdf):
-    with open(json_file, 'r', encoding='utf-8') as f:
+    with open(json_file, "r", encoding="utf-8") as f:
         data = json.load(f)
 
-    
-    num_answers = data['num_answers']
-    pdfmetrics.registerFont(TTFont('Arial', '../fonts/arial.ttf'))
-    pdfmetrics.registerFont(TTFont('Arial-Bold', '../fonts/arialbd.ttf'))
-    font_regular = 'Arial'
-    font_bold = 'Arial-Bold'
-
+    font_regular, font_bold = _register_fonts()
+    num_answers = data.get("num_answers") or 0
 
     c = canvas.Canvas(output_pdf, pagesize=A4)
     width, height = A4
@@ -78,14 +89,15 @@ def generate_test_pdf(json_file, output_pdf):
     y_position = height - margin
 
     c.setFont(font_bold, 18)
-    c.drawString(margin, y_position, data['title'])
+    c.drawString(margin, y_position, data.get("title", ""))
 
-    qr = qrcode.make(data['id'])
-    qr_path = "qr.png"
+    qr = qrcode.make(data.get("id", ""))
+    qr_dir = Path(output_pdf).resolve().parent
+    qr_dir.mkdir(parents=True, exist_ok=True)
+    qr_path = qr_dir / f"qr_{data.get('id', 'test')}.png"
     qr.save(qr_path)
-    c.drawImage(qr_path, 350, 650, width=150, height=150)
-
-    os.remove(qr_path)
+    c.drawImage(str(qr_path), 350, 650, width=150, height=150)
+    qr_path.unlink(missing_ok=True)
 
     y_position -= 1.5 * cm
 
@@ -97,18 +109,18 @@ def generate_test_pdf(json_file, output_pdf):
     y_position -= 2 * cm
 
     row_height = 1 * cm
-    box_height = (data['num_questions'] * row_height + 0.3*cm)
-    
+    box_height = (data.get("num_questions", 0) * row_height + 0.3 * cm)
+
     # Define starting position for circles (closer to numbers)
     x_start = margin + 2 * cm
     circle_spacing = 1.2 * cm
-    
+
     # Calculate rectangle width based on number of answers
-    rect_width = (num_answers * circle_spacing) + 0.2*cm
-    
+    rect_width = (num_answers * circle_spacing) + 0.2 * cm
+
     # Draw the rectangle (moved closer to numbers)
-    c.rect(x_start - 0.7*cm, y_position - box_height - 0.3*cm, rect_width, box_height)
-    
+    c.rect(x_start - 0.7 * cm, y_position - box_height - 0.3 * cm, rect_width, box_height)
+
     # Draw letters above the rectangle, aligned with circles
     c.setFont(font_bold, 10)
     for i in range(num_answers):
@@ -120,8 +132,8 @@ def generate_test_pdf(json_file, output_pdf):
     y_position -= 0.8 * cm
 
     # Draw question numbers and circles
-    for question in data['questions']:
-        q_id = question['id']
+    for question in data.get("questions", []):
+        q_id = question.get("id")
 
         c.setFont(font_regular, 10)
         c.drawString(margin + 0.5 * cm, y_position - 0.1 * cm, f"{q_id}.")
@@ -138,19 +150,19 @@ def generate_test_pdf(json_file, output_pdf):
     y_position = height - margin
 
     c.setFont(font_bold, 14)
-    c.drawString(margin, y_position, f"{data['title']} - Varianta {data['varianta']}")
+    c.drawString(margin, y_position, f"{data.get('title', '')} - Varianta {data.get('varianta', 1)}")
     y_position -= 1.5 * cm
 
     c.line(margin, y_position, width - margin, y_position)
     y_position -= 1 * cm
 
-    for question in data['questions']:
+    for question in data.get("questions", []):
         if y_position < margin + 1 * cm:
             c.showPage()
             y_position = height - margin
 
             c.setFont(font_bold, 14)
-            c.drawString(margin, y_position, f"{data['title']} - Varianta {data['varianta']}")
+            c.drawString(margin, y_position, f"{data.get('title', '')} - Varianta {data.get('varianta', 1)}")
             y_position -= 1.5 * cm
             c.line(margin, y_position, width - margin, y_position)
             y_position -= 1 * cm
@@ -158,7 +170,4 @@ def generate_test_pdf(json_file, output_pdf):
         y_position = draw_question_with_options(c, question, y_position, margin, width, font_regular, font_bold)
 
     c.save()
-    print(f"PDF generat cu succes: {output_pdf}")
-
-
-generate_test_pdf('question.json', 'test_output.pdf')
+    return output_pdf
