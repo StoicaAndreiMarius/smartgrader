@@ -1,5 +1,5 @@
 venv/
-img/
+images/
 __pycache__/
 *.pyc
 *.env

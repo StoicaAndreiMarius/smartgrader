@@ -2,13 +2,15 @@
 
 .sidebar {
     /* Layout & Sizing */
-    width: 260px;
-    height: auto; 
-    top: 2.5vh;
-    left: 20px;
+    width: 72px;
+
+    position: sticky;
+    top: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Pushes top and bottom sections apart */
+    justify-content: space-between; /* Pushes top and bottom sections apart when tall enough */
+    overflow: hidden;
+    transition: width 0.25s ease, padding 0.25s ease;
     
     /* Appearance */
     background-color: #1a1d24; /* A specific dark slate to match your image exactly */
@@ -16,7 +18,7 @@
     
     margin-top: 2em;
     border-radius: 20px; /* Rounded corners as seen in image */
-    padding: 30px 20px;
+    padding: 20px 12px;
     box-sizing: border-box;
     
     /* Optional: Soft shadow for depth */
@@ -24,33 +26,69 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.sidebar:hover {
+    width: 260px;
+    padding: 24px 18px;
+}
+
 /* Remove default list styles */
 .sidebar .nav-list {
     list-style: none;
     padding: 0;
     margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
 /* Link Styling */
 .sidebar .nav-link {
     display: flex;
     align-items: center;
+    justify-content: center;
+    gap: 0;
     color: var(--text-light);
     text-decoration: none;
-    padding: 12px 15px;
-    margin-bottom: 8px;
+    padding: 12px;
     border-radius: 12px;
     font-size: 1rem;
     font-weight: 500;
     transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.sidebar:hover .nav-link {
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 12px 15px;
 }
 
 /* Icon Styling */
 .sidebar .nav-link i {
     font-size: 1.4rem;
-    margin-right: 15px;
+    margin-right: 0;
     color: var(--text-light); /* Icons default to white */
-    transition: color 0.3s ease;
+    transition: color 0.3s ease, margin 0.25s ease;
+}
+
+.sidebar:hover .nav-link i {
+    margin-right: 12px;
+}
+
+.sidebar .nav-link span {
+    max-width: 0;
+    opacity: 0;
+    transform: translateX(-8px);
+    pointer-events: none;
+    overflow: hidden;
+    transition: opacity 0.2s ease 0.05s, transform 0.2s ease 0.05s, max-width 0.25s ease;
+}
+
+.sidebar:hover .nav-link span {
+    max-width: 180px;
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
 }
 
 /* Hover State */
