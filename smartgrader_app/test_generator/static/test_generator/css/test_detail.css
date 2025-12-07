@@ -19,20 +19,20 @@
 .detail-header h1 {
     margin: 0 0 6px 0;
     color: #fff;
-    font-size: 24px;
+    font-size: 26px;
 }
 
 .detail-header .description {
     margin: 0 0 8px 0;
     color: #ccc;
-    font-size: 13px;
+    font-size: 14px;
 }
 
 .meta-row {
     display: flex;
     gap: 12px;
     color: #aaa;
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .detail-actions .btn {
@@ -57,7 +57,7 @@
 .panel h2 {
     margin: 0 0 10px 0;
     color: #fff;
-    font-size: 16px;
+    font-size: 17px;
 }
 
 .stat-blocks {
@@ -76,13 +76,13 @@
 
 .stat-value {
     color: #69c8a0;
-    font-size: 18px;
+    font-size: 19px;
     font-weight: 700;
 }
 
 .stat-label {
     color: #aaa;
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .table {
@@ -100,14 +100,14 @@
 
 .table-head {
     color: #8ac6ff;
-    font-size: 12px;
+    font-size: 13px;
     border-bottom: 1px solid #2a2a2a;
     padding-bottom: 6px;
 }
 
 .table-row {
     color: #ddd;
-    font-size: 13px;
+    font-size: 14px;
 }
 
 .table-row.muted {
@@ -120,6 +120,7 @@
     color: #ddd;
     display: grid;
     gap: 8px;
+    font-size: 14px;
 }
 
 .questions-list li {
@@ -129,11 +130,12 @@
 .q-text {
     font-weight: 600;
     color: #fff;
+    font-size: 15px;
 }
 
 .q-answer {
     color: #8ac6ff;
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .btn-primary {
@@ -212,4 +214,37 @@
     max-width: 100%;
     border-radius: 6px;
     margin: 6px 0;
+}
+.questions-panel {
+    max-height: 420px;
+    overflow-y: auto;
+}
+
+.questions-panel::-webkit-scrollbar {
+    width: 8px;
+}
+
+.questions-panel::-webkit-scrollbar-thumb {
+    background: #667eea;
+    border-radius: 4px;
+}
+
+.questions-panel::-webkit-scrollbar-track {
+    background: #1c1c1c;
+}
+.q-meta {
+    color: #aaa;
+    font-size: 12px;
+    margin: 4px 0;
+    display: flex;
+    gap: 6px;
+}
+
+.q-label {
+    color: #8ac6ff;
+    font-weight: 600;
+}
+
+.q-value {
+    color: #fff;
 }

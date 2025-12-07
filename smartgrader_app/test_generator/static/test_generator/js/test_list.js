@@ -42,19 +42,23 @@ function displayTests(tests) {
         }
 
         return `
-            <a href="/tests/${item.id}/" class="test-card-link">
-                <div class="test-card">
-                    <h3>${escapeHtml(item.title)}</h3>
-                    ${descriptionHtml}
-                    <div class="stats-box">
-                        ${statsHtml}
-                    </div>
-                    <div class="test-meta">
-                        <span class="test-meta-item">${item.num_questions} questions</span>
-                        <span class="test-meta-item">${escapeHtml(item.created_at)}</span>
+            <div class="test-card">
+                <div class="test-card-header">
+                    <h3><a href="/tests/${item.id}/" class="test-card-link">${escapeHtml(item.title)}</a></h3>
+                    <div class="test-card-actions">
+                        <button class="btn btn-tertiary pdf-btn" data-id="${item.id}">Generate PDF</button>
+                        <button class="btn btn-danger delete-test-btn" data-id="${item.id}">Delete</button>
                     </div>
                 </div>
-            </a>
+                ${descriptionHtml}
+                <div class="stats-box">
+                    ${statsHtml}
+                </div>
+                <div class="test-meta">
+                    <span class="test-meta-item">${item.num_questions} questions</span>
+                    <span class="test-meta-item">${escapeHtml(item.created_at)}</span>
+                </div>
+            </div>
         `;
     }).join('');
 }
@@ -122,4 +126,78 @@ document.addEventListener('DOMContentLoaded', function() {
     if (window.allTests) {
         displayTests(window.allTests);
     }
+
+    gridClickHandler();
 });
+
+function gridClickHandler() {
+    const grid = document.getElementById('test-grid');
+    if (!grid) return;
+
+    grid.addEventListener('click', function (e) {
+        const deleteBtn = e.target.closest('.delete-test-btn');
+        const pdfBtn = e.target.closest('.pdf-btn');
+
+        if (pdfBtn) {
+            e.preventDefault();
+            e.stopPropagation();
+            const testId = pdfBtn.dataset.id;
+            if (!testId) return;
+
+            const originalText = pdfBtn.textContent;
+            pdfBtn.disabled = true;
+            pdfBtn.textContent = 'Generating...';
+
+            fetch(`/tests/${testId}/pdf/`, {
+                method: 'GET',
+                credentials: 'same-origin',
+                headers: { 'Content-Type': 'application/json' },
+            })
+                .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
+                .then(({ ok, data }) => {
+                    pdfBtn.disabled = false;
+                    pdfBtn.textContent = originalText;
+                    if (!ok || data.error || !data.pdf_url) {
+                        alert(data && data.error ? data.error : 'Failed to generate PDF.');
+                        return;
+                    }
+                    window.open(data.pdf_url, '_blank');
+                })
+                .catch((err) => {
+                    pdfBtn.disabled = false;
+                    pdfBtn.textContent = originalText;
+                    console.error(err);
+                    alert('Failed to generate PDF.');
+                });
+            return;
+        }
+
+        if (!deleteBtn) return;
+        e.preventDefault();
+        e.stopPropagation();
+
+        const testId = deleteBtn.dataset.id;
+        if (!testId) return;
+
+        if (!confirm('Delete this test?')) return;
+
+        fetch(`/tests/${testId}/delete/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
+        })
+            .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
+            .then(({ ok, data }) => {
+                if (!ok || data.error) {
+                    alert(data.error || 'Failed to delete test.');
+                    return;
+                }
+                window.allTests = (window.allTests || []).filter((t) => String(t.id) !== String(testId));
+                filterAndSortTests();
+            })
+            .catch((err) => {
+                console.error(err);
+                alert('Failed to delete test.');
+            });
+    });
+}

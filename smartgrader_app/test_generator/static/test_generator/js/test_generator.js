@@ -529,7 +529,8 @@ document.addEventListener('DOMContentLoaded', function() {
         let questionsPerVariant = questions.length;
 
         if (enableRandom) {
-            numVariants = parseInt(document.getElementById('num-variants').value) || 2;
+            numVariants = parseInt(document.getElementById('num-variants').value) || 1;
+            if (numVariants < 1) numVariants = 1;
             questionsPerVariant = parseInt(document.getElementById('questions-per-variant').value);
 
             if (!questionsPerVariant || questionsPerVariant <= 0) {

@@ -67,10 +67,24 @@
     box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
 }
 
+.test-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
 .test-card h3 {
     margin: 0 0 8px 0;
     color: #69c8a0;
     font-size: 16px;
+}
+
+.test-card-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
 }
 
 .test-card p {
@@ -125,4 +139,32 @@
 .tests-actions .btn {
     padding: 8px 14px;
     font-size: 13px;
+}
+
+.btn-danger {
+    background: #ff5252;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.btn-danger:hover {
+    background: #e64848;
+}
+
+.btn-tertiary {
+    background: #1c1c1c;
+    color: #fff;
+    border: 1px solid #2f2f2f;
+    border-radius: 6px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.btn-tertiary:hover {
+    border-color: #69c8a0;
 }

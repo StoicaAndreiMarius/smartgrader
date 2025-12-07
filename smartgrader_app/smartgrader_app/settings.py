@@ -17,6 +17,7 @@ from decouple import config
 BASE_DIR = Path(__file__).resolve().parent.parent
 print(f"BASE_DIR: {BASE_DIR}")
 
+ANTHROPIC_API_KEY = config('ANTHROPIC_API_KEY')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/

@@ -20,6 +20,7 @@
         </div>
         <div class="detail-actions">
             <button class="btn btn-primary" data-open="test-generator">Generate New</button>
+            <button class="btn btn-tertiary" id="generate-pdf-btn" data-id="{{ test.id }}">Generate PDF</button>
             <button class="btn btn-secondary" onclick="window.history.back()">Back</button>
         </div>
     </header>
@@ -68,24 +69,25 @@
             </div>
         </div>
 
-        <div class="panel">
+        <div class="panel questions-panel">
             <h2>Questions</h2>
             <ol class="questions-list">
                 {% for q in questions %}
                 <li>
-                    <div class="q-text">{{ q.text }}</div>
+                    <div class="q-meta">
+                        <span class="q-label">Question:</span>
+                        <span class="q-value">{{ q.text }}</span>
+                    </div>
                     {% if q.img %}
                     <div class="q-img"><img src="{{ q.img }}" alt="Question image"></div>
                     {% endif %}
                     <ul class="options-list">
                         {% for opt in q.options %}
-                        {% with letter="ABCDEFGHIJKLMNOPQRSTUVWXYZ"|slice:forloop.counter0|stringformat:"s" %}
-                        <li class="{% if forloop.counter0 == q.correct_index %}correct{% endif %}">
-                            <span class="opt-label">{{ letter }}</span>
-                            <span class="opt-text">{{ opt }}</span>
-                            {% if forloop.counter0 == q.correct_index %}<span class="badge">Correct</span>{% endif %}
+                        <li class="{% if opt.is_correct %}correct{% endif %}">
+                            <span class="opt-label">{{ opt.label }}</span>
+                            <span class="opt-text">{{ opt.text }}</span>
+                            {% if opt.is_correct %}<span class="badge">Correct</span>{% endif %}
                         </li>
-                        {% endwith %}
                         {% endfor %}
                     </ul>
                     <div class="q-answer">Points: {{ q.points }}</div>
