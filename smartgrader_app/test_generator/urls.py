@@ -6,6 +6,7 @@ from .views import (
     create_test,
     delete_test,
     pdf_test,
+    ai_generate_questions,
 )
 
 urlpatterns = [
@@ -14,5 +15,6 @@ urlpatterns = [
     path("tests/<int:test_id>/", test_detail_page, name="test-detail"),
     path("tests/<int:test_id>/pdf/", pdf_test, name="test-pdf"),
     path("accounts/api-create-test/", create_test, name="api-create-test"),
+    path("accounts/api-ai-generate/", ai_generate_questions, name="api-ai-generate"),
     path("tests/<int:test_id>/delete/", delete_test, name="test-delete"),
 ]

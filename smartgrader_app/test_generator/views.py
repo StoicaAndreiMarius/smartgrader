@@ -321,3 +321,129 @@ def pdf_test(request, test_id: int):
 
     pdf_url = _pdf_url(request, entry.id)
     return JsonResponse({"message": "PDF generated", "pdf_url": pdf_url, "test_id": entry.id})
+
+
+@csrf_exempt
+def ai_generate_questions(request):
+    """Generate multiple-choice questions using the Anthropic API."""
+    if not _ensure_teacher(request.user):
+        return JsonResponse({"error": "Only professors can generate tests."}, status=403)
+
+    if request.method != "POST":
+        return JsonResponse({"error": "Only POST allowed"}, status=400)
+
+    try:
+        payload = json.loads(request.body or "{}")
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON in request"}, status=400)
+
+    topic = (payload.get("topic") or "").strip()
+    difficulty = (payload.get("difficulty") or "medium").strip().lower()
+    try:
+        num_questions = int(payload.get("num_questions") or 10)
+    except (TypeError, ValueError):
+        num_questions = 10
+    try:
+        num_options = int(payload.get("num_options") or 5)
+    except (TypeError, ValueError):
+        num_options = 5
+
+    if not topic:
+        return JsonResponse({"error": "Topic is required"}, status=400)
+    if num_questions < 1 or num_questions > 50:
+        return JsonResponse({"error": "Number of questions must be between 1 and 50"}, status=400)
+    if num_options < 2 or num_options > 5:
+        return JsonResponse({"error": "Number of options must be between 2 and 5"}, status=400)
+    if difficulty not in {"easy", "medium", "hard"}:
+        difficulty = "medium"
+
+    try:
+        import anthropic
+    except ImportError:
+        return JsonResponse(
+            {"error": "AI generation requires the 'anthropic' package. Install it with: pip install anthropic"},
+            status=500,
+        )
+
+    api_key = getattr(settings, "ANTHROPIC_API_KEY", None)
+    if not api_key:
+        return JsonResponse(
+            {"error": "ANTHROPIC_API_KEY environment variable not set. Please configure your API key."},
+            status=500,
+        )
+
+    client = anthropic.Anthropic(api_key=api_key)
+
+    option_letters = ["A", "B", "C", "D", "E"][:num_options]
+    extra_options = ""
+    if num_options >= 4:
+        extra_options += ', "Option D text"'
+    if num_options >= 5:
+        extra_options += ', "Option E text"'
+
+    prompt = (
+        f"Generate {num_questions} multiple-choice questions about: {topic}\n\n"
+        f"Difficulty level: {difficulty}\n"
+        f"Number of options per question: {num_options} ({', '.join(option_letters)})\n\n"
+        "Format each question as a JSON object with this exact structure:\n"
+        "{\n"
+        '    \"question\": \"The question text\",\n'
+        f'    \"options\": [\"Option A text\", \"Option B text\", \"Option C text\"{extra_options}],\n'
+        '    \"correct_answer\": 0\n'
+        "}\n\n"
+        f"Where correct_answer is the index (0-{num_options - 1}) of the correct option.\n\n"
+        f"Return a JSON array of {num_questions} questions. Make the questions educational, clear, and appropriately challenging for {difficulty} level.\n"
+        f"Ensure each question tests understanding of {topic}."
+    )
+
+    try:
+        message = client.messages.create(
+            model="claude-3-5-haiku-20241022",
+            max_tokens=4000,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        response_text = message.content[0].text if message.content else ""
+
+        if "```json" in response_text:
+            response_text = response_text.split("```json", 1)[1].split("```", 1)[0].strip()
+        elif "```" in response_text:
+            response_text = response_text.split("```", 1)[1].split("```", 1)[0].strip()
+
+        questions = json.loads(response_text)
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON received from AI"}, status=500)
+    except Exception as exc:
+        return JsonResponse({"error": f"AI generation failed: {exc}"}, status=500)
+
+    if not isinstance(questions, list):
+        return JsonResponse({"error": "Invalid response format from AI"}, status=500)
+
+    validated_questions = []
+    for q in questions:
+        if not isinstance(q, dict):
+            continue
+
+        text = (q.get("question") or q.get("text") or "").strip()
+        options = q.get("options") or []
+        try:
+            correct_index = int(q.get("correct_answer", 0))
+        except (TypeError, ValueError):
+            correct_index = 0
+
+        if not text or not isinstance(options, list) or len(options) != num_options:
+            continue
+        if correct_index < 0 or correct_index >= num_options:
+            continue
+
+        validated_questions.append(
+            {
+                "question": text,
+                "options": [str(opt).strip() for opt in options],
+                "correct_answer": correct_index,
+            }
+        )
+
+    if not validated_questions:
+        return JsonResponse({"error": "No valid questions generated"}, status=500)
+
+    return JsonResponse({"success": True, "questions": validated_questions, "count": len(validated_questions)})

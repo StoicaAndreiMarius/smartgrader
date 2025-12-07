@@ -617,13 +617,150 @@ document.addEventListener('DOMContentLoaded', function() {
     const aiGenerate = document.getElementById('ai-generate');
     const aiError = document.getElementById('ai-error');
     const aiLoading = document.getElementById('ai-loading');
+    const aiTopic = document.getElementById('ai-topic');
+    const aiNumQuestions = document.getElementById('ai-num-questions');
+    const aiDifficulty = document.getElementById('ai-difficulty');
 
-    // Check if AI button exists
+    const resetAiState = () => {
+        if (aiError) {
+            aiError.style.display = 'none';
+            aiError.textContent = '';
+        }
+        if (aiLoading) {
+            aiLoading.style.display = 'none';
+        }
+        if (aiGenerate) {
+            aiGenerate.disabled = false;
+        }
+    };
+
+    const openAiModal = () => {
+        resetAiState();
+        if (aiModal) {
+            aiModal.style.display = 'flex';
+        }
+        if (aiTopic) {
+            aiTopic.value = '';
+        }
+        if (aiNumQuestions) {
+            aiNumQuestions.value = '10';
+        }
+        if (aiDifficulty) {
+            aiDifficulty.value = 'medium';
+        }
+    };
+
+    const closeAiModal = () => {
+        resetAiState();
+        if (aiModal) {
+            aiModal.style.display = 'none';
+        }
+    };
+
+    const showAiError = (message) => {
+        if (aiError) {
+            aiError.textContent = message;
+            aiError.style.display = 'block';
+        } else {
+            showError(message);
+        }
+    };
+
+    const setAiLoading = (isLoading) => {
+        if (aiLoading) {
+            aiLoading.style.display = isLoading ? 'block' : 'none';
+        }
+        if (aiGenerate) {
+            aiGenerate.disabled = isLoading;
+        }
+    };
+
     if (aiGenerateBtn) {
-        // Disable AI generate feature for now
-        aiGenerateBtn.disabled = true;
-        aiGenerateBtn.classList.add('is-disabled');
-        aiGenerateBtn.setAttribute('title', 'AI generation is currently disabled');
+        aiGenerateBtn.disabled = false;
+        aiGenerateBtn.classList.remove('is-disabled');
+        aiGenerateBtn.removeAttribute('title');
+        aiGenerateBtn.addEventListener('click', openAiModal);
+    }
+
+    if (aiModalClose) {
+        aiModalClose.addEventListener('click', closeAiModal);
+    }
+
+    if (aiCancel) {
+        aiCancel.addEventListener('click', closeAiModal);
+    }
+
+    if (aiModal) {
+        aiModal.addEventListener('click', (event) => {
+            if (event.target === aiModal) {
+                closeAiModal();
+            }
+        });
+    }
+
+    if (aiGenerate) {
+        aiGenerate.addEventListener('click', async () => {
+            resetAiState();
+
+            const topic = aiTopic ? aiTopic.value.trim() : '';
+            const numQuestions = aiNumQuestions ? parseInt(aiNumQuestions.value) || 0 : 0;
+            const difficulty = aiDifficulty ? aiDifficulty.value : 'medium';
+            const numOptions = numOptionsSelect ? parseInt(numOptionsSelect.value) || 5 : 5;
+
+            console.log('Generating questions:', { topic, numQuestions, difficulty, numOptions });
+
+            if (!topic) {
+                showAiError('Please enter a topic.');
+                return;
+            }
+            if (numQuestions < 1 || numQuestions > 50) {
+                showAiError('Number of questions must be between 1 and 50.');
+                return;
+            }
+
+            setAiLoading(true);
+
+            try {
+                const response = await fetch('/accounts/api-ai-generate/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({
+                        topic: topic,
+                        num_questions: numQuestions,
+                        num_options: numOptions,
+                        difficulty: difficulty
+                    })
+                });
+
+                let data = {};
+                try {
+                    data = await response.json();
+                } catch (err) {
+                    data = {};
+                }
+
+                if (!response.ok || data.error) {
+                    showAiError(data.error || `Failed to generate questions (status ${response.status})`);
+                    return;
+                }
+
+                const generated = Array.isArray(data.questions) ? data.questions : [];
+                if (generated.length === 0) {
+                    showAiError('AI did not return any questions. Please try again.');
+                    return;
+                }
+
+                generated.forEach(q => addQuestionFromData(q));
+                closeAiModal();
+                showSuccess(`Added ${generated.length} AI-generated questions.`);
+            } catch (error) {
+                console.error('AI generation error:', error);
+                showAiError('An error occurred while generating questions. Please try again.');
+            } finally {
+                setAiLoading(false);
+            }
+        });
     }
 });
 
