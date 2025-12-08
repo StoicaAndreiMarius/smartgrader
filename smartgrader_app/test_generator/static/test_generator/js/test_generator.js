@@ -50,7 +50,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Check if critical elements exist
     if (!questionsContainer) {
         console.error('Critical error: questions-container element not found');
         if (typeof Toast !== 'undefined') {
@@ -59,7 +58,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
-    // Helper functions for messages using Toast notifications
     function showError(message) {
         if (typeof Toast !== 'undefined') {
             Toast.error('Error', message);
@@ -76,10 +74,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Add first question by default
     addQuestion();
 
-    // File upload handler
     if (fileUpload) {
         fileUpload.addEventListener('change', function(e) {
         const file = e.target.files[0];
@@ -109,11 +105,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (questions && questions.length > 0) {
                     console.log('Importing', questions.length, 'questions');
-                    // Clear existing questions
                     questionsContainer.innerHTML = '';
                     questionCount = 0;
 
-                    // Add imported questions
                     questions.forEach((q, index) => {
                         console.log(`Adding question ${index + 1}:`, q);
                         addQuestionFromData(q);
@@ -136,26 +130,22 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         reader.readAsText(file);
-        // Reset file input
         e.target.value = '';
         });
     }
 
-    // Randomization toggle
     if (enableRandomization) {
         enableRandomization.addEventListener('change', function() {
             randomizationSettings.style.display = this.checked ? 'block' : 'none';
         });
     }
 
-    // Add question button click
     if (addQuestionBtn) {
         addQuestionBtn.addEventListener('click', function() {
             addQuestion();
         });
     }
 
-    // Form submission
     if (testForm) {
         testForm.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -163,14 +153,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Save and generate PDF button
     if (saveAndGenerateBtn) {
         saveAndGenerateBtn.addEventListener('click', function() {
             saveTest(true);
         });
     }
 
-    // Cancel button
     if (cancelBtn) {
         cancelBtn.addEventListener('click', function(event) {
             if (modal && modal.classList.contains('is-open')) {
@@ -181,7 +169,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Update options when number of options changes
     if (numOptionsSelect) {
         numOptionsSelect.addEventListener('change', function() {
             updateAllQuestionOptions();
@@ -191,16 +178,12 @@ document.addEventListener('DOMContentLoaded', function() {
     function parseJSONFile(content) {
         const data = JSON.parse(content);
 
-        // Helper function to parse correct answer (handles both string and number)
         const parseCorrectAnswer = (q) => {
             let answer = q.correct_answer !== undefined ? q.correct_answer :
                         (q.correctAnswer !== undefined ? q.correctAnswer : 0);
-            // Convert string to number if needed
             return typeof answer === 'string' ? parseInt(answer) : answer;
         };
 
-        // Support multiple JSON formats
-        // Format 1: Array of question objects
         if (Array.isArray(data)) {
             return data.map(q => ({
                 question: q.question || q.text || q.questionText || '',
@@ -209,7 +192,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }));
         }
 
-        // Format 2: Object with questions array (including formats with num_questions, num_answers)
         if (data.questions && Array.isArray(data.questions)) {
             return data.questions.map(q => ({
                 question: q.question || q.text || q.questionText || '',
@@ -227,16 +209,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const questions = [];
 
-        // Skip header row, process data rows
         for (let i = 1; i < lines.length; i++) {
             const line = lines[i].trim();
             if (!line) continue;
 
-            // Parse CSV line (handle quoted values)
             const values = parseCSVLine(line);
 
             if (values.length >= 3) {
-                // Format: question, option1, option2, option3, ..., correct_answer_index
                 const question = values[0];
                 const correctAnswer = parseInt(values[values.length - 1]) || 0;
                 const options = values.slice(1, values.length - 1);
@@ -284,7 +263,6 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Validate question data
         if (!questionData || !questionData.question || !questionData.options || questionData.options.length === 0) {
             console.error('Invalid question data:', questionData);
             return;
@@ -300,7 +278,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const optionLabels = ['A', 'B', 'C', 'D', 'E'];
         let optionsHTML = '';
 
-        // Escape HTML in option values
         const escapeHtml = (text) => {
             const div = document.createElement('div');
             div.textContent = text;
@@ -423,7 +400,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const optionsContainer = card.querySelector('.options-container');
         const optionLabels = ['A', 'B', 'C', 'D', 'E'];
 
-        // Get current values
         const currentValues = [];
         const currentCorrect = card.querySelector(`input[name="question_${questionId}_correct"]:checked`)?.value || '0';
 
@@ -432,7 +408,6 @@ document.addEventListener('DOMContentLoaded', function() {
             currentValues[i] = input ? input.value : '';
         }
 
-        // Rebuild options
         let optionsHTML = '<label style="margin-bottom: 10px; display: block; color: #ddd;">Options & Correct Answer *</label>';
 
         for (let i = 0; i < numOptions; i++) {
@@ -459,11 +434,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function saveTest(generatePDF) {
-        // Clear previous messages
         document.getElementById('error-message').style.display = 'none';
         document.getElementById('success-message').style.display = 'none';
 
-        // Collect form data
         const title = document.getElementById('test-title').value.trim();
         const description = document.getElementById('test-description').value.trim();
         const numOptions = parseInt(numOptionsSelect.value);
@@ -473,7 +446,6 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Collect questions
         const questions = [];
         const questionCards = questionsContainer.querySelectorAll('.question-card');
 
@@ -523,7 +495,6 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Check for randomization
         const enableRandom = document.getElementById('enable-randomization').checked;
         let numVariants = 1;
         let questionsPerVariant = questions.length;
@@ -544,7 +515,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // Prepare payload
         const payload = {
             title: title,
             description: description,
@@ -556,7 +526,6 @@ document.addEventListener('DOMContentLoaded', function() {
             questions_per_variant: questionsPerVariant
         };
 
-        // Send to API
         fetch('/accounts/api-create-test/', {
             method: 'POST',
             headers: {
@@ -570,7 +539,6 @@ document.addEventListener('DOMContentLoaded', function() {
             try {
                 data = await response.json();
             } catch (err) {
-                // ignore parse errors
             }
 
             if (!response.ok || data.error) {
@@ -603,12 +571,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Make saveTest available globally for the submit button
     window.saveTest = saveTest;
 
-    // ============================================
-    // AI QUESTION GENERATION
-    // ============================================
 
     const aiGenerateBtn = document.getElementById('ai-generate-btn');
     const aiModal = document.getElementById('ai-modal');
@@ -764,7 +728,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Global function to remove question
 function removeQuestion(questionId) {
     const card = document.querySelector(`[data-question-id="${questionId}"]`);
     if (card) {

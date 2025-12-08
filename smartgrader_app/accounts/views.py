@@ -11,7 +11,6 @@ User = get_user_model()
 def landing(request):
     return render(request, 'accounts/landing.html')
 
-
 def login_page(request):
     return render(request, 'accounts/login.html')
 
@@ -21,6 +20,7 @@ def register_page(request):
 
 @csrf_exempt
 def register_user(request):
+    """Register a new user and create their profile."""
     if request.method != "POST":
         return JsonResponse({"error": "Only POST allowed"}, status=400)
 
@@ -47,10 +47,8 @@ def register_user(request):
             password=password,
             first_name=first_name,
             last_name=last_name,
-            # Allow immediate login for newly registered users
             is_active=True
         )
-        # Profile is created via signal; update the role if provided
         profile, _ = Profile.objects.get_or_create(user=user)
         profile.role = role
         profile.save()
@@ -69,6 +67,7 @@ def register_user(request):
 
 @csrf_exempt
 def login_user(request):
+    """Authenticate a user and return a JSON response."""
     if request.method != "POST":
         return JsonResponse({"error": "Only POST allowed"}, status=400)
 
@@ -86,7 +85,6 @@ def login_user(request):
     user = authenticate(request, email=email, password=password)
 
     if user is None:
-        # Provide a clearer error for inactive or missing accounts
         try:
             existing = User.objects.get(email=email)
             if not existing.is_active:

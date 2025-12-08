@@ -67,13 +67,11 @@ function filterAndSortTests() {
     const searchTerm = document.getElementById('search-tests').value.toLowerCase();
     const sortOption = document.getElementById('sort-tests').value;
 
-    // Filter
     let filtered = window.allTests.filter(test =>
         test.title.toLowerCase().includes(searchTerm) ||
         (test.description && test.description.toLowerCase().includes(searchTerm))
     );
 
-    // Sort
     filtered.sort((a, b) => {
         switch(sortOption) {
             case 'date-desc':
@@ -96,13 +94,11 @@ function filterAndSortTests() {
     displayTests(filtered);
 }
 
-// Add event listeners
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('search-tests');
     const sortSelect = document.getElementById('sort-tests');
     const dataScript = document.getElementById('tests-data');
 
-    // Load initial data from embedded JSON
     if (dataScript && dataScript.textContent) {
         try {
             window.allTests = JSON.parse(dataScript.textContent);
@@ -122,7 +118,6 @@ document.addEventListener('DOMContentLoaded', function() {
         sortSelect.addEventListener('change', filterAndSortTests);
     }
 
-    // Initial render
     if (window.allTests) {
         displayTests(window.allTests);
     }
