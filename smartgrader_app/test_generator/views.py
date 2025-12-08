@@ -14,6 +14,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.append(str(PROJECT_ROOT))
 
 from pdf_generator.pdf_generator import generate_test_pdf
+from test_grader.models import Test as GraderTest
 from .models import TestEntry
 
 
@@ -33,14 +34,37 @@ def generator_page(request):
 def _serialize_test(entry):
     payload = entry.payload or {}
     questions = payload.get("questions", [])
+    try:
+        grader_test = _ensure_grader_test(entry)
+        subs = grader_test.submissions.filter(processed=True)
+        submission_count = subs.count()
+        avg_pct = round(sum(s.percentage for s in subs) / submission_count, 2) if submission_count else 0
+    except Exception:
+        grader_test = None
+        submission_count = payload.get("submission_count", 0)
+        avg_pct = payload.get("average_percentage", 0)
+
+    latest_submission = None
+    if grader_test:
+        latest = grader_test.submissions.order_by("-submitted_at").first()
+        if latest:
+            latest_submission = {
+                "student": latest.full_name,
+                "percentage": latest.percentage,
+                "score": latest.score,
+                "submitted_at": latest.submitted_at.strftime("%Y-%m-%d %H:%M"),
+            }
+    if not latest_submission:
+        latest_submission = payload.get("latest_submission")
+
     return {
         "id": entry.id,
         "title": entry.title,
         "description": entry.description or "",
-        "submission_count": payload.get("submission_count", 0),
-        "average_percentage": payload.get("average_percentage", 0),
-        "latest_submission": payload.get("latest_submission"),
-        "latest_percentage": payload.get("latest_percentage", 0),
+        "submission_count": submission_count,
+        "average_percentage": avg_pct,
+        "latest_submission": latest_submission,
+        "latest_percentage": latest_submission["percentage"] if isinstance(latest_submission, dict) else 0,
         "num_questions": len(questions),
         "created_at": entry.created_at.strftime("%Y-%m-%d %H:%M"),
         "created_timestamp": int(entry.created_at.timestamp()),
@@ -84,6 +108,49 @@ def _build_questions(payload):
     return questions
 
 
+def _ensure_grader_test(entry):
+    """Create a TestGrader.Test row for this generated test if it does not already exist."""
+    try:
+        return GraderTest.objects.get(id=entry.id, created_by=entry.owner)
+    except GraderTest.DoesNotExist:
+        payload = entry.payload or {}
+        questions_payload = payload.get("questions", [])
+        normalized = []
+        max_options = 0
+
+        for q in questions_payload:
+            options = q.get("options") or []
+            max_options = max(max_options, len(options))
+            try:
+                correct_answer = int(q.get("correct_answer", 0))
+            except (TypeError, ValueError):
+                correct_answer = 0
+
+            normalized.append(
+                {
+                    "question": q.get("text") or q.get("question") or "",
+                    "options": options,
+                    "correct_answer": correct_answer,
+                }
+            )
+
+        try:
+            num_options = int(payload.get("num_answers") or payload.get("num_options") or max_options or 5)
+        except (TypeError, ValueError):
+            num_options = max_options or 5
+
+        grader_test = GraderTest.objects.create(
+            id=entry.id,
+            title=entry.title,
+            description=entry.description or "",
+            questions=normalized,
+            created_by=entry.owner,
+            num_questions=len(normalized),
+            num_options=num_options,
+        )
+        return grader_test
+
+
 def test_detail_page(request, test_id: int):
     # Serve detail for a test from the DB
     if not _ensure_teacher(request.user):
@@ -95,16 +162,55 @@ def test_detail_page(request, test_id: int):
         return JsonResponse({"error": "Test not found"}, status=404)
 
     payload = entry.payload or {}
+    grader_test = _ensure_grader_test(entry)
+    submissions_qs = grader_test.submissions.filter(processed=True).order_by("-submitted_at")
+    submission_count = submissions_qs.count()
+    avg_pct = round(sum(sub.percentage for sub in submissions_qs) / submission_count, 2) if submission_count else 0
+
+    latest_submission = submissions_qs.first()
+    latest_data = (
+        {
+            "student": latest_submission.full_name,
+            "percentage": latest_submission.percentage,
+            "score": latest_submission.score,
+            "submitted_at": latest_submission.submitted_at.strftime("%Y-%m-%d %H:%M"),
+        }
+        if latest_submission
+        else None
+    )
+
+    submissions_table = []
+    for sub in submissions_qs[:10]:
+        image_url = sub.image.url if sub.image else None
+        if image_url:
+            image_url = request.build_absolute_uri(image_url)
+
+        submissions_table.append(
+            {
+                "id": sub.id,
+                "student_name": sub.full_name,
+                "first_name": sub.first_name or "",
+                "last_name": sub.last_name or "",
+                "score": sub.score,
+                "total": sub.total_questions,
+                "percentage": sub.percentage,
+                "submitted_at": sub.submitted_at.strftime("%Y-%m-%d %H:%M"),
+                "image_url": image_url,
+                "answers": sub.answers,
+                "correct_answers": [q.get("correct_answer") for q in grader_test.questions],
+            }
+        )
+
     test_detail = {
         "id": entry.id,
         "title": entry.title,
         "description": entry.description or "",
-        "num_questions": len(payload.get("questions", [])),
-        "num_answers": payload.get("num_answers") or payload.get("num_options") or 0,
+        "num_questions": grader_test.num_questions or len(payload.get("questions", [])),
+        "num_answers": payload.get("num_answers") or payload.get("num_options") or grader_test.num_options,
         "created_at": entry.created_at.strftime("%Y-%m-%d %H:%M"),
-        "submission_count": payload.get("submission_count", 0),
-        "average_percentage": payload.get("average_percentage", 0),
-        "latest_submission": payload.get("latest_submission"),
+        "submission_count": submission_count,
+        "average_percentage": avg_pct,
+        "latest_submission": latest_data,
     }
 
     questions = _build_questions(payload)
@@ -112,7 +218,13 @@ def test_detail_page(request, test_id: int):
     return render(
         request,
         "test_generator/test_detail.html",
-        {"test": test_detail, "submissions": payload.get("submissions", []), "questions": questions},
+        {
+            "test": test_detail,
+            "submissions": submissions_table,
+            "submissions_json": json.dumps(submissions_table),
+            "correct_answers": [q.get("correct_answer") for q in grader_test.questions],
+            "questions": questions,
+        },
     )
 
 

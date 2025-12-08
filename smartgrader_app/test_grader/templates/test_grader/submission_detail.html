@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Submission Detail{% endblock %}
+
+{% block content %}
+<div class="test-detail-page" style="padding: 20px; color: #e5e5e5;">
+    <h1>{{ test.title }} &mdash; Submission #{{ submission.id }}</h1>
+    <p>Student: {{ submission.full_name }} | Score: {{ submission.score }}/{{ submission.total_questions }} ({{ submission.percentage }}%)</p>
+
+    <h3>Answers</h3>
+    <ol>
+        {% for answer in answer_details %}
+            <li>
+                <div>
+                    <strong>Q{{ answer.question_num }}:</strong> {{ answer.question_text }}
+                    {% if answer.is_correct %}<span style="color:#69c8a0;">Correct</span>{% else %}<span style="color:#f2994a;">Incorrect</span>{% endif %}
+                </div>
+                <div>Student answer: {{ answer.student_answer }} | Correct: {{ answer.correct_answer }}</div>
+            </li>
+        {% endfor %}
+    </ol>
+</div>
+{% endblock %}

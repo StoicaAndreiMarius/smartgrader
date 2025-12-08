@@ -5,7 +5,7 @@
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'test_generator/css/test_detail.css' %}">
-<div class="test-detail-page">
+<div class="test-detail-page" data-test-id="{{ test.id }}">
     <header class="detail-header">
         <div>
             <p class="eyebrow">Test ID: {{ test.id }}</p>
@@ -15,26 +15,61 @@
                 <span>{{ test.num_questions }} questions</span>
                 <span>{{ test.num_answers }} options each</span>
                 <span>Created: {{ test.created_at }}</span>
-                <span>Submissions: {{ test.submission_count }}</span>
+                <span id="meta-submissions">Submissions: {{ test.submission_count }}</span>
+                <span id="meta-average">Average: {{ test.average_percentage }}%</span>
             </div>
         </div>
         <div class="detail-actions">
-            <button class="btn btn-primary" data-open="test-generator">Generate New</button>
             <button class="btn btn-tertiary" id="generate-pdf-btn" data-id="{{ test.id }}">Generate PDF</button>
             <button class="btn btn-secondary" onclick="window.history.back()">Back</button>
         </div>
     </header>
 
-    <section class="detail-grid">
-        <div class="panel">
+    <section class="detail-stack">
+        <div class="panel upload-panel">
+            <h2>Upload Submissions</h2>
+            <div id="upload-drop-zone" class="upload-drop-zone">
+                <p>Drop answer sheet images or a ZIP here.</p>
+                <div class="upload-actions">
+                    <button class="btn btn-primary" id="upload-images-btn">Upload images</button>
+                    <button class="btn btn-secondary" id="upload-zip-btn">Upload ZIP</button>
+                    <a class="btn btn-tertiary" href="{% url 'export-csv' test.id %}">Export CSV</a>
+                </div>
+                <input type="file" id="image-uploads" accept="image/*" multiple hidden>
+                <input type="file" id="zip-upload" accept=".zip" hidden>
+                <div id="upload-status" class="upload-status"></div>
+                <div id="upload-progress-bar" class="progress-bar" style="display: none;">
+                    <div class="progress-fill"></div>
+                </div>
+                <div id="upload-progress-text" class="upload-status"></div>
+                <div id="upload-results"></div>
+                <div id="upload-errors"></div>
+            </div>
+        </div>
+
+        <div class="panel submissions-panel">
+            <div class="panel-header">
+                <h2>Submissions</h2>
+                <div class="upload-actions" style="margin: 0;">
+                    <button class="btn btn-tertiary" id="refresh-submissions">Refresh</button>
+                </div>
+            </div>
+            <div class="stat-inline">
+                <span id="stat-submission-count">{{ test.submission_count }}</span> submissions •
+                <span id="stat-average">{{ test.average_percentage }}%</span> average
+            </div>
+            <div id="submissions-list" class="submissions-list"></div>
+        </div>
+
+        <div class="panel performance-panel">
             <h2>Performance</h2>
             <div class="stat-blocks">
                 <div class="stat-block">
-                    <div class="stat-value">{{ test.submission_count }}</div>
+                    <div class="stat-value" id="stat-submission-count-2">{{ test.submission_count }}</div>
                     <div class="stat-label">Submissions</div>
                 </div>
                 <div class="stat-block">
-                    <div class="stat-value">{{ test.average_percentage }}%</div>
+                    <div class="stat-value" id="stat-average-2">{{ test.average_percentage }}%</div>
                     <div class="stat-label">Average</div>
                 </div>
                 <div class="stat-block">
@@ -46,26 +81,6 @@
                     <div class="stat-label">No submissions</div>
                     {% endif %}
                 </div>
-            </div>
-        </div>
-
-        <div class="panel">
-            <h2>Recent Submissions</h2>
-            <div class="table">
-                <div class="table-head">
-                    <span>Student</span>
-                    <span>Score</span>
-                    <span>Submitted</span>
-                </div>
-                {% for sub in submissions %}
-                <div class="table-row">
-                    <span>{{ sub.student }}</span>
-                    <span>{{ sub.percentage }}% ({{ sub.score }} pts)</span>
-                    <span>{{ sub.submitted_at }}</span>
-                </div>
-                {% empty %}
-                <div class="table-row muted">No submissions yet.</div>
-                {% endfor %}
             </div>
         </div>
 
@@ -98,10 +113,23 @@
             </ol>
         </div>
     </section>
+
+    <div id="submission-modal" class="image-modal" aria-hidden="true">
+        <div class="image-modal-content submission-modal-content">
+            <button id="submission-modal-close" class="btn btn-secondary image-modal-close">Close</button>
+            <div id="submission-modal-body"></div>
+        </div>
+    </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
+<script>
+    window.testId = {{ test.id }};
+    window.initialSubmissions = {{ submissions_json|safe }};
+    window.correctAnswers = {{ correct_answers|safe }};
+</script>
 <script src="{% static 'test_generator/js/test_generator.js' %}"></script>
 <script src="{% static 'test_generator/js/test_detail.js' %}"></script>
+<script src="{% static 'test_grader/js/test_submissions.js' %}"></script>
 {% endblock %}
