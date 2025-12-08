@@ -1,14 +1,27 @@
 /* Ensure your variables are defined in :root (as you provided) */
 
+.page-shell {
+    display: flex;
+    gap: 20px;
+    flex: 1;
+    padding: 0 16px 20px 220px; /* leave room for sidebar expanded state */
+    box-sizing: border-box;
+}
+
+.page-content {
+    flex: 1;
+    min-width: 0;
+}
+
 .sidebar {
     /* Layout & Sizing */
-    width: 72px;
-
-    position: sticky;
-    top: 20px;
+    width: 56px;
+    position: fixed;
+    left: 20px;
+    top: 104px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Pushes top and bottom sections apart when tall enough */
+    justify-content: flex-start;
     gap: 10px;
     overflow: hidden;
     transition: width 0.25s ease, padding 0.25s ease;
@@ -17,10 +30,11 @@
     background-color: #1a1d24; /* A specific dark slate to match your image exactly */
     /* OR use your variable: background-color: var(--card-background); */
     
-    margin-top: 2em;
-    border-radius: 20px; /* Rounded corners as seen in image */
-    padding: 20px 12px;
+    margin-top: 0;
+    border-radius: 14px;
+    padding: 14px 10px;
     box-sizing: border-box;
+    align-self: flex-start;
     
     /* Optional: Soft shadow for depth */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -28,8 +42,8 @@
 }
 
 .sidebar:hover {
-    width: 260px;
-    padding: 24px 18px;
+    width: 190px;
+    padding: 16px 12px;
 }
 
 /* Remove default list styles */
@@ -56,9 +70,9 @@
     gap: 0;
     color: var(--text-light);
     text-decoration: none;
-    padding: 12px;
-    border-radius: 12px;
-    font-size: 1rem;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 0.95rem;
     font-weight: 500;
     transition: all 0.3s ease;
     white-space: nowrap;
@@ -66,13 +80,13 @@
 
 .sidebar:hover .nav-link {
     justify-content: flex-start;
-    gap: 12px;
-    padding: 12px 15px;
+    gap: 10px;
+    padding: 10px 12px;
 }
 
 /* Icon Styling */
 .sidebar .nav-link i {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     margin-right: 0;
     color: var(--text-light); /* Icons default to white */
     transition: color 0.3s ease, margin 0.25s ease;
@@ -88,11 +102,11 @@
     transform: translateX(-8px);
     pointer-events: none;
     overflow: hidden;
-    transition: opacity 0.2s ease 0.05s, transform 0.2s ease 0.05s, max-width 0.25s ease;
+    transition: opacity 0.2s ease 0.05s, transform 0.2s ease 0.05s, max-width 0.2s ease;
 }
 
 .sidebar:hover .nav-link span {
-    max-width: 180px;
+    max-width: 150px;
     opacity: 1;
     transform: translateX(0);
     pointer-events: auto;
@@ -100,9 +114,11 @@
 
 /* Tablet adjustments */
 @media (max-width: 1024px) {
+    .page-shell {
+        padding: 0 12px 14px 200px;
+    }
     .sidebar {
-        top: 12px;
-        margin-top: 1.2em;
+        top: 80px;
     }
 }
 
@@ -116,9 +132,8 @@
         position: fixed;
         bottom: 14px;
         top: auto;
-        left: 50%;
-        transform: translateX(-50%);
-        width: calc(100% - 16px);
+        left: 8px;
+        right: 8px;
         min-height: auto;
         flex-direction: row;
         flex-wrap: nowrap;
@@ -175,6 +190,15 @@
         opacity: 0.95;
         transform: none;
         pointer-events: auto;
+    }
+
+    .page-shell {
+        flex-direction: column;
+        padding: 0 10px 120px 10px;
+    }
+
+    .page-content {
+        width: 100%;
     }
 }
 
