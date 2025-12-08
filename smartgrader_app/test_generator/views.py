@@ -19,19 +19,20 @@ from .models import TestEntry
 
 
 def _ensure_teacher(user):
-    # Verify the requester is a teacher
+    """Return True when the requester is an authenticated teacher."""
     profile = getattr(user, "profile", None)
     return user.is_authenticated and profile and profile.role == "teacher"
 
 
 def generator_page(request):
-    # Render the generator for teachers
+    """Render the generator page for teachers only."""
     if not _ensure_teacher(request.user):
         return JsonResponse({"error": "Only professors can generate tests."}, status=403)
     return render(request, "test_generator/test_generator.html")
 
 
 def _serialize_test(entry):
+    """Convert a TestEntry into a JSON-friendly dict with summary stats."""
     payload = entry.payload or {}
     questions = payload.get("questions", [])
     try:
@@ -73,7 +74,7 @@ def _serialize_test(entry):
 
 
 def test_list_page(request):
-    # Serve the test list using DB-backed entries
+    """Serve the test list using DB-backed entries."""
     if not _ensure_teacher(request.user):
         return JsonResponse({"error": "Only professors can view tests."}, status=403)
 
@@ -88,6 +89,7 @@ def test_list_page(request):
 
 
 def _build_questions(payload):
+    """Normalize raw question payload into the shape expected by templates."""
     questions = []
     letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     for idx_q, q in enumerate(payload.get("questions", []), start=1):
@@ -152,7 +154,7 @@ def _ensure_grader_test(entry):
 
 
 def test_detail_page(request, test_id: int):
-    # Serve detail for a test from the DB
+    """Serve detail for a specific test and its submissions."""
     if not _ensure_teacher(request.user):
         return JsonResponse({"error": "Only professors can view tests."}, status=403)
 
@@ -230,7 +232,7 @@ def test_detail_page(request, test_id: int):
 
 @csrf_exempt
 def create_test(request):
-    # Accept JSON payload to create a new test and store in DB
+    """Accept JSON payload to create a new test and store it in the DB."""
     if not _ensure_teacher(request.user):
         return JsonResponse({"error": "Only professors can generate tests."}, status=403)
 
@@ -320,7 +322,7 @@ def create_test(request):
 
 @csrf_exempt
 def delete_test(request, test_id: int):
-    # Delete a test by id
+    """Delete a test by id."""
     if not _ensure_teacher(request.user):
         return JsonResponse({"error": "Only professors can delete tests."}, status=403)
 
@@ -337,6 +339,7 @@ def delete_test(request, test_id: int):
 
 
 def _build_pdf_payload(entry):
+    """Prepare the JSON structure the PDF generator expects for a test entry."""
     payload = entry.payload or {}
     questions_payload = payload.get("questions") or payload.get("original_questions") or []
     if not questions_payload:
@@ -391,6 +394,7 @@ def _build_pdf_payload(entry):
 
 
 def _pdf_storage_paths(test_id: int):
+    """Return paths for the intermediate JSON file and generated PDF."""
     generated_dir = Path(settings.BASE_DIR) / "static" / "generated"
     generated_dir.mkdir(parents=True, exist_ok=True)
     json_path = generated_dir / f"test_{test_id}.json"
@@ -399,6 +403,7 @@ def _pdf_storage_paths(test_id: int):
 
 
 def _pdf_url(request, test_id: int):
+    """Build the absolute URL to the generated PDF for a test."""
     static_url = settings.STATIC_URL or "/static/"
     if not static_url.startswith(("http://", "https://", "/")):
         static_url = f"/{static_url}"
@@ -409,7 +414,7 @@ def _pdf_url(request, test_id: int):
 
 
 def pdf_test(request, test_id: int):
-    # Generate a PDF for the given test using the stored JSON payload
+    """Generate a PDF for the given test using the stored JSON payload."""
     if not _ensure_teacher(request.user):
         return JsonResponse({"error": "Only professors can view tests."}, status=403)
 

@@ -1,4 +1,3 @@
-// Trigger PDF generation directly from the detail page button
 document.addEventListener('DOMContentLoaded', () => {
     const pdfBtn = document.getElementById('generate-pdf-btn');
     if (!pdfBtn) return;

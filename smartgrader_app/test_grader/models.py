@@ -2,9 +2,10 @@ from django.db import models
 from django.conf import settings
 
 class Test(models.Model):
+    """Persisted graded test definition with correct answers and metadata."""
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
-    questions = models.JSONField()  # Stores test questions and answers as JSON
+    questions = models.JSONField()
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='graded_tests')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -19,13 +20,14 @@ class Test(models.Model):
 
 
 class Submission(models.Model):
+    """Student submission with detected answers, scores, and uploaded sheet."""
     test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='submissions')
     student_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name='submissions', blank=True, null=True)
     first_name = models.CharField(max_length=255, blank=True, null=True)
     last_name = models.CharField(max_length=255, blank=True, null=True)
     image = models.ImageField(upload_to='submissions/')
-    answers = models.JSONField()  # Stores detected answers as array [0, 1, 2, ...] where index is question number
-    score = models.IntegerField()  # Number of correct answers
+    answers = models.JSONField()
+    score = models.IntegerField()
     total_questions = models.IntegerField()
     percentage = models.FloatField()
     submitted_at = models.DateTimeField(auto_now_add=True)

@@ -26,6 +26,7 @@ from .models import Submission, Test
 
 
 def _normalize_questions(raw_questions):
+    """Convert raw question payloads into a consistent structure and count options."""
     normalized = []
     max_options = 0
 
@@ -77,6 +78,7 @@ def _get_or_create_test(test_id, user):
 
 
 def _temp_dir(test_id):
+    """Create and return the temporary directory for a test's uploads."""
     temp_dir = Path(settings.MEDIA_ROOT) / 'temp' / f'test_{test_id}'
     temp_dir.mkdir(parents=True, exist_ok=True)
     return temp_dir
