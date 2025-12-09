@@ -15,9 +15,10 @@
 </head>
 <body style="display: flex; flex-direction: column; background-color: #1c1c1c; flex-grow: 1;">
     {% include 'components/navbar.html' %}
-    <div class="page-shell">
+    {% if request.user.is_authenticated %}
         {% include 'components/sidebar.html' %}
-        <main class="page-content">
+    {% endif %}
+        <main style="flex-grow: 1; padding: 20px; margin-top: 60px; {% if request.user.is_authenticated %}margin-left: 220px;{% endif %} min-height: calc(100vh - 120px);">
             {% block content %}{% endblock %}
         </main>
     </div>
