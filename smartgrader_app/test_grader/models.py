@@ -27,7 +27,7 @@ class Submission(models.Model):
     last_name = models.CharField(max_length=255, blank=True, null=True)
     image = models.ImageField(upload_to='submissions/')
     answers = models.JSONField()
-    score = models.IntegerField()
+    score = models.FloatField()
     total_questions = models.IntegerField()
     percentage = models.FloatField()
     submitted_at = models.DateTimeField(auto_now_add=True)
