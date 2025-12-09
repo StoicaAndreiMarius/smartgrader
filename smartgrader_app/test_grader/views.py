@@ -33,16 +33,27 @@ def _normalize_questions(raw_questions):
     for raw in raw_questions:
         question_text = (raw.get('question') or raw.get('text') or '').strip()
         options = raw.get('options') or []
-        try:
-            correct_answer = int(raw.get('correct_answer', 0))
-        except (TypeError, ValueError):
-            correct_answer = 0
+
+        # Normalize correct_answer to list format for multiple answer support
+        correct_answer_raw = raw.get('correct_answer', 0)
+        if isinstance(correct_answer_raw, list):
+            correct_answer = correct_answer_raw
+        elif isinstance(correct_answer_raw, int):
+            correct_answer = [correct_answer_raw]
+        else:
+            try:
+                correct_answer = [int(correct_answer_raw)]
+            except (TypeError, ValueError):
+                correct_answer = [0]
+
+        grading_mode = raw.get('grading_mode', 'all_or_nothing')
 
         normalized.append(
             {
                 'question': question_text,
                 'options': options,
                 'correct_answer': correct_answer,
+                'grading_mode': grading_mode,
             }
         )
         max_options = max(max_options, len(options))
@@ -60,7 +71,12 @@ def _get_or_create_test(test_id, user):
         questions, detected_options = _normalize_questions(payload.get('questions') or [])
 
         try:
-            num_options = int(payload.get('num_answers') or payload.get('num_options') or detected_options or 5)
+            value = payload.get('num_answers') or payload.get('num_options') or detected_options or 5
+            # Handle case where value might be a list
+            if isinstance(value, list):
+                num_options = detected_options or 5
+            else:
+                num_options = int(value)
         except (TypeError, ValueError):
             num_options = detected_options or 5
 
@@ -96,7 +112,9 @@ def upload_submissions(request, test_id):
     except (Test.DoesNotExist, TestEntry.DoesNotExist):
         return JsonResponse({"error": "Test not found"}, status=404)
 
+    # Extract correct answers and grading modes for all questions
     correct_answers = [q['correct_answer'] for q in test.questions]
+    grading_modes = [q.get('grading_mode', 'all_or_nothing') for q in test.questions]
     uploaded_files = request.FILES.getlist('files')
     zip_file = request.FILES.get('zip_file')
 
@@ -119,7 +137,7 @@ def upload_submissions(request, test_id):
                 for filename in files:
                     if filename.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp')):
                         image_path = Path(root) / filename
-                        result = process_single_submission(test, str(image_path), filename, correct_answers)
+                        result = process_single_submission(test, str(image_path), filename, correct_answers, grading_modes)
                         results.append(result)
         except Exception as exc:
             errors.append(f"Error processing zip file: {exc}")
@@ -136,7 +154,7 @@ def upload_submissions(request, test_id):
                     destination.write(chunk)
 
             try:
-                result = process_single_submission(test, str(temp_path), uploaded_file.name, correct_answers)
+                result = process_single_submission(test, str(temp_path), uploaded_file.name, correct_answers, grading_modes)
                 results.append(result)
             finally:
                 if temp_path.exists():
@@ -154,10 +172,10 @@ def upload_submissions(request, test_id):
     )
 
 
-def process_single_submission(test, image_path, filename, correct_answers):
+def process_single_submission(test, image_path, filename, correct_answers, grading_modes):
     """Process a single submission image."""
     try:
-        omr_result = process_omr_image(image_path, test.num_questions, test.num_options)
+        omr_result = process_omr_image(image_path, test.num_questions, test.num_options, darkness_threshold=0.6)
         if not omr_result['success']:
             return {
                 'filename': filename,
@@ -166,7 +184,7 @@ def process_single_submission(test, image_path, filename, correct_answers):
             }
 
         detected_answers = omr_result['answers']
-        grading = grade_submission(detected_answers, correct_answers)
+        grading = grade_submission(detected_answers, correct_answers, grading_modes)
 
         submission_image_path = f"submissions/test_{test.id}_{filename}"
         with open(image_path, 'rb') as image_file:
@@ -267,7 +285,22 @@ def submission_detail_page(request, test_id, submission_id):
     for i, question in enumerate(test.questions):
         student_answer = submission.answers[i] if i < len(submission.answers) else None
         correct_answer = question['correct_answer']
-        is_correct = student_answer == correct_answer
+        grading_mode = question.get('grading_mode', 'all_or_nothing')
+
+        # Normalize both to sets for comparison
+        student_set = set()
+        if isinstance(student_answer, list):
+            student_set = set(student_answer)
+        elif isinstance(student_answer, int):
+            student_set = {student_answer}
+
+        correct_set = set()
+        if isinstance(correct_answer, list):
+            correct_set = set(correct_answer)
+        elif isinstance(correct_answer, int):
+            correct_set = {correct_answer}
+
+        is_correct = student_set == correct_set
 
         answer_details.append(
             {
@@ -277,6 +310,7 @@ def submission_detail_page(request, test_id, submission_id):
                 'student_answer': student_answer,
                 'correct_answer': correct_answer,
                 'is_correct': is_correct,
+                'grading_mode': grading_mode,
             }
         )
 
@@ -364,9 +398,19 @@ def export_results_csv(request, test_id):
         ]
 
         for i in range(test.num_questions):
-            if i < len(submission.answers) and submission.answers[i] is not None:
-                answer_idx = submission.answers[i]
-                row.append(option_letters[answer_idx] if answer_idx < len(option_letters) else str(answer_idx))
+            if i < len(submission.answers):
+                answer = submission.answers[i]
+
+                if answer is None:
+                    row.append('-')
+                elif isinstance(answer, list):
+                    # Multiple answers - show as "A,C,E"
+                    answer_str = ','.join([option_letters[idx] if idx < len(option_letters) else str(idx)
+                                          for idx in sorted(answer)])
+                    row.append(answer_str)
+                else:
+                    # Single answer
+                    row.append(option_letters[answer] if answer < len(option_letters) else str(answer))
             else:
                 row.append('-')
 
