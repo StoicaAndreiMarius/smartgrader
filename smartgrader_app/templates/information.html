@@ -1,0 +1,341 @@
+{% extends 'base.html' %}
+
+{% block title %}Information & About - SmartGrader{% endblock %}
+
+{% block content %}
+<style>
+    .info-container {
+        max-width: 1000px;
+        margin: 50px auto;
+        padding: 30px;
+    }
+
+    .info-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .info-header h1 {
+        color: #fff;
+        font-size: 2.5em;
+        margin-bottom: 10px;
+    }
+
+    .info-header p {
+        color: #aaa;
+        font-size: 1.2em;
+    }
+
+    .info-section {
+        background: #2a2a2a;
+        padding: 30px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .info-section h2 {
+        color: #4CAF50;
+        font-size: 1.8em;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #444;
+        padding-bottom: 10px;
+    }
+
+    .info-section h3 {
+        color: #fff;
+        font-size: 1.3em;
+        margin-top: 20px;
+        margin-bottom: 15px;
+    }
+
+    .info-section p, .info-section li {
+        color: #ccc;
+        line-height: 1.8;
+        margin-bottom: 12px;
+    }
+
+    .info-section ul, .info-section ol {
+        margin-left: 20px;
+    }
+
+    .info-section a {
+        color: #4CAF50;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    .info-section a:hover {
+        color: #45a049;
+        text-decoration: underline;
+    }
+
+    .tech-stack {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+    }
+
+    .tech-item {
+        background: #333;
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .tech-item h4 {
+        color: #4CAF50;
+        margin-bottom: 8px;
+        font-size: 1.1em;
+    }
+
+    .tech-item p {
+        color: #aaa;
+        font-size: 0.9em;
+        margin: 0;
+    }
+
+    .license-box {
+        background: #1c1c1c;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #4CAF50;
+        margin: 20px 0;
+    }
+
+    .license-box pre {
+        color: #ccc;
+        font-family: monospace;
+        font-size: 0.9em;
+        line-height: 1.6;
+        margin: 0;
+        white-space: pre-wrap;
+    }
+
+    .conduct-list {
+        background: #333;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+    }
+
+    .conduct-list h4 {
+        color: #fff;
+        margin-bottom: 15px;
+    }
+
+    .conduct-list ul {
+        margin: 0;
+        padding-left: 20px;
+    }
+
+    .conduct-list li {
+        color: #ccc;
+        margin: 10px 0;
+    }
+
+    .version-badge {
+        display: inline-block;
+        background: #4CAF50;
+        color: white;
+        padding: 6px 15px;
+        border-radius: 20px;
+        font-size: 0.9em;
+        margin-left: 10px;
+    }
+</style>
+
+<div class="info-container">
+    <div class="info-header">
+        <h1>About SmartGrader <span class="version-badge">v1.0.0</span></h1>
+        <p>Automated Multiple-Choice Test Grading System</p>
+    </div>
+
+    <!-- About -->
+    <div class="info-section">
+        <h2>About SmartGrader</h2>
+        <p>
+            SmartGrader is an automated multiple-choice test management and grading system designed for educational institutions.
+            It streamlines the entire testing workflow from test creation to automated grading using advanced Optical Mark Recognition (OMR) technology.
+        </p>
+        <p>
+            Built with modern web technologies and powered by AI, SmartGrader eliminates the tedious work of manual grading,
+            allowing educators to focus on teaching while providing students with instant feedback on their performance.
+        </p>
+
+        <h3>Key Capabilities</h3>
+        <ul>
+            <li><strong>AI-Powered Question Generation:</strong> Leverages Anthropic's Claude API to generate high-quality test questions</li>
+            <li><strong>Computer Vision-Based Grading:</strong> Uses OpenCV for accurate bubble detection and answer recognition</li>
+            <li><strong>Instant Feedback:</strong> Students receive immediate results upon submission</li>
+            <li><strong>Flexible Grading:</strong> Supports both single and multiple correct answers with partial credit options</li>
+            <li><strong>Secure Sharing:</strong> Cryptographically secure share codes for test distribution</li>
+            <li><strong>Comprehensive Analytics:</strong> Detailed statistics and CSV export for further analysis</li>
+        </ul>
+    </div>
+
+    <!-- Technology Stack -->
+    <div class="info-section">
+        <h2>Technology Stack</h2>
+        <p>SmartGrader is built using the following technologies:</p>
+
+        <div class="tech-stack">
+            <div class="tech-item">
+                <h4>Django 6.0</h4>
+                <p>Backend Framework</p>
+            </div>
+            <div class="tech-item">
+                <h4>PostgreSQL</h4>
+                <p>Database</p>
+            </div>
+            <div class="tech-item">
+                <h4>OpenCV</h4>
+                <p>OMR Processing</p>
+            </div>
+            <div class="tech-item">
+                <h4>Claude API</h4>
+                <p>AI Question Generation</p>
+            </div>
+            <div class="tech-item">
+                <h4>ReportLab</h4>
+                <p>PDF Generation</p>
+            </div>
+            <div class="tech-item">
+                <h4>Python 3.x</h4>
+                <p>Programming Language</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- License -->
+    <div class="info-section">
+        <h2>License</h2>
+        <p>SmartGrader is released under the MIT License, which allows for commercial and private use, modification, and distribution.</p>
+
+        <div class="license-box">
+            <pre>MIT License
+
+Copyright (c) 2025 SmartGrader Contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</pre>
+        </div>
+    </div>
+
+    <!-- Code of Conduct -->
+    <div class="info-section">
+        <h2>Code of Conduct</h2>
+        <p>
+            We are committed to providing a welcoming and inclusive environment for everyone.
+            All participants in the SmartGrader community are expected to adhere to the following code of conduct.
+        </p>
+
+        <div class="conduct-list">
+            <h4>Our Standards</h4>
+            <ul>
+                <li><strong>Be Respectful:</strong> Treat all users, contributors, and community members with respect and professionalism</li>
+                <li><strong>Be Inclusive:</strong> Welcome people of all backgrounds and identities</li>
+                <li><strong>Be Constructive:</strong> Provide helpful feedback and criticism in a positive manner</li>
+                <li><strong>Be Honest:</strong> Maintain academic integrity; do not share test answers or help others cheat</li>
+                <li><strong>Respect Privacy:</strong> Do not share other users' personal information without permission</li>
+            </ul>
+        </div>
+
+        <div class="conduct-list">
+            <h4>Unacceptable Behavior</h4>
+            <ul>
+                <li>Harassment, discrimination, or hate speech of any kind</li>
+                <li>Academic dishonesty, including sharing answers or test content without authorization</li>
+                <li>Attempting to circumvent security measures or access unauthorized data</li>
+                <li>Spamming, trolling, or disruptive behavior</li>
+                <li>Violating the privacy of other users</li>
+            </ul>
+        </div>
+
+        <p>
+            Violations of this code of conduct may result in account suspension or termination.
+            If you experience or witness unacceptable behavior, please report it to your system administrator.
+        </p>
+    </div>
+
+    <!-- Academic Integrity -->
+    <div class="info-section">
+        <h2>Academic Integrity</h2>
+        <p>SmartGrader is designed to support fair and honest assessment. Users must:</p>
+        <ul>
+            <li><strong>Students:</strong> Complete all tests independently using only authorized materials</li>
+            <li><strong>Students:</strong> Not share test questions, answers, or access codes without teacher permission</li>
+            <li><strong>Students:</strong> Submit only their own work</li>
+            <li><strong>Teachers:</strong> Ensure tests are secure and accessible only to enrolled students</li>
+            <li><strong>Teachers:</strong> Protect the confidentiality of student grades and performance data</li>
+            <li><strong>Teachers:</strong> Use AI-generated questions responsibly and review them for accuracy</li>
+        </ul>
+        <p>
+            Academic dishonesty undermines the educational process and will not be tolerated.
+            SmartGrader provides tools to help maintain test security, including unique share codes and submission tracking.
+        </p>
+    </div>
+
+    <!-- Privacy & Data -->
+    <div class="info-section">
+        <h2>Privacy & Data Security</h2>
+        <p>We take privacy and data security seriously:</p>
+        <ul>
+            <li><strong>User Data:</strong> Account information is stored securely and used only for authentication and test management</li>
+            <li><strong>Test Results:</strong> Only the test creator (teacher) and the student can view individual test results</li>
+            <li><strong>Submission Images:</strong> Answer sheet images are stored securely and accessible only to authorized users</li>
+            <li><strong>Share Codes:</strong> Test access codes are cryptographically secure and unique to each test</li>
+            <li><strong>No Third-Party Sharing:</strong> Student data is never shared with third parties without explicit consent</li>
+        </ul>
+        <p>
+            For detailed information about data handling practices, please consult your institution's privacy policy or contact your system administrator.
+        </p>
+    </div>
+
+    <!-- Credits & Acknowledgments -->
+    <div class="info-section">
+        <h2>Credits & Acknowledgments</h2>
+        <p>SmartGrader is made possible by these open-source technologies and services:</p>
+        <ul>
+            <li><strong>Django:</strong> Web framework for rapid development</li>
+            <li><strong>OpenCV:</strong> Computer vision library for OMR processing</li>
+            <li><strong>Anthropic Claude:</strong> AI-powered question generation</li>
+            <li><strong>PostgreSQL:</strong> Reliable and scalable database</li>
+            <li><strong>ReportLab:</strong> Python library for PDF generation</li>
+            <li><strong>NumPy:</strong> Numerical computing for image processing</li>
+            <li><strong>Pillow:</strong> Python Imaging Library</li>
+        </ul>
+        <p>
+            Special thanks to all contributors, testers, and educators who have helped shape SmartGrader into what it is today.
+        </p>
+    </div>
+
+    <!-- Contact -->
+    <div class="info-section">
+        <h2>Contact & Support</h2>
+        <p>For questions, issues, or feedback:</p>
+        <ul>
+            <li><strong>Technical Support:</strong> Contact your system administrator</li>
+            <li><strong>Bug Reports:</strong> Submit issues through your institution's IT helpdesk</li>
+            <li><strong>Feature Requests:</strong> Discuss with your teaching staff or IT department</li>
+            <li><strong>General Help:</strong> Visit the <a href="{% url 'help' %}">Help Page</a></li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

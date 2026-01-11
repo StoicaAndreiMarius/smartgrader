@@ -1,0 +1,377 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ test.title }} - SmartGrader{% endblock %}
+
+{% block content %}
+<style>
+    .student-test-container {
+        max-width: 900px;
+        margin: 50px auto;
+        padding: 30px;
+        background: #2a2a2a;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .test-header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #444;
+    }
+
+    .test-header h1 {
+        color: #fff;
+        font-size: 2em;
+        margin-bottom: 10px;
+    }
+
+    .test-info {
+        color: #aaa;
+        font-size: 1.1em;
+    }
+
+    .test-info p {
+        margin: 8px 0;
+    }
+
+    .upload-section {
+        margin-top: 30px;
+        padding: 25px;
+        background: #333;
+        border-radius: 8px;
+    }
+
+    .upload-section h2 {
+        color: #fff;
+        margin-bottom: 15px;
+        font-size: 1.5em;
+    }
+
+    .upload-instructions {
+        color: #ccc;
+        margin-bottom: 20px;
+        line-height: 1.6;
+    }
+
+    .upload-instructions ol {
+        margin-left: 20px;
+    }
+
+    .upload-instructions li {
+        margin: 8px 0;
+    }
+
+    .file-upload-area {
+        border: 2px dashed #666;
+        border-radius: 8px;
+        padding: 40px;
+        text-align: center;
+        background: #2a2a2a;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .file-upload-area:hover {
+        border-color: #4CAF50;
+        background: #333;
+    }
+
+    .file-upload-area.dragover {
+        border-color: #4CAF50;
+        background: #3a3a3a;
+    }
+
+    .upload-icon {
+        font-size: 48px;
+        color: #666;
+        margin-bottom: 15px;
+    }
+
+    .upload-text {
+        color: #ccc;
+        font-size: 1.1em;
+    }
+
+    .file-input {
+        display: none;
+    }
+
+    .preview-section {
+        margin-top: 20px;
+        display: none;
+    }
+
+    .preview-section.show {
+        display: block;
+    }
+
+    .preview-image {
+        max-width: 100%;
+        max-height: 400px;
+        border-radius: 8px;
+        margin: 15px 0;
+    }
+
+    .submit-btn {
+        background: #4CAF50;
+        color: white;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 6px;
+        font-size: 1.1em;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .submit-btn:hover {
+        background: #45a049;
+    }
+
+    .submit-btn:disabled {
+        background: #555;
+        cursor: not-allowed;
+    }
+
+    .progress-container {
+        display: none;
+        margin-top: 20px;
+    }
+
+    .progress-container.show {
+        display: block;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 30px;
+        background: #444;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: #4CAF50;
+        transition: width 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+    }
+
+    .error-message {
+        background: #f44336;
+        color: white;
+        padding: 15px;
+        border-radius: 6px;
+        margin-top: 15px;
+        display: none;
+    }
+
+    .error-message.show {
+        display: block;
+    }
+
+    .previous-submission {
+        background: #3a3a3a;
+        padding: 15px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+        border-left: 4px solid #4CAF50;
+    }
+
+    .previous-submission h3 {
+        color: #fff;
+        margin-bottom: 8px;
+    }
+
+    .previous-submission p {
+        color: #ccc;
+        margin: 5px 0;
+    }
+</style>
+
+<div class="student-test-container">
+    <div class="test-header">
+        <h1>{{ test.title }}</h1>
+        <div class="test-info">
+            {% if test.description %}
+                <p>{{ test.description }}</p>
+            {% endif %}
+            <p><strong>Number of Questions:</strong> {{ test.num_questions }}</p>
+            <p><strong>Number of Options:</strong> {{ test.num_options }} (A-{{ "ABCDE"|slice:":test.num_options"|last }})</p>
+        </div>
+    </div>
+
+    {% if has_previous_submission %}
+        <div class="previous-submission">
+            <h3>Previous Submission</h3>
+            <p>You have already submitted this test.</p>
+            <p><strong>Score:</strong> {{ previous_score|floatformat:1 }}%</p>
+            {% if test.allow_multiple_submissions %}
+                <p style="color: #4CAF50;">Multiple submissions are allowed. You can submit again below.</p>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <div class="upload-section">
+        <h2>Upload Your Answer Sheet</h2>
+        <div class="upload-instructions">
+            <p><strong>Instructions:</strong></p>
+            <ol>
+                <li>Complete the answer sheet by filling in the bubbles for your answers</li>
+                <li>Scan or take a clear photo of your answer sheet</li>
+                <li>Upload the image below</li>
+                <li>Wait for automatic grading to complete</li>
+                <li>View your results immediately</li>
+            </ol>
+        </div>
+
+        <div class="file-upload-area" id="uploadArea">
+            <i class='bx bx-cloud-upload upload-icon'></i>
+            <div class="upload-text">
+                <p><strong>Click to upload</strong> or drag and drop</p>
+                <p style="font-size: 0.9em; color: #888;">PNG, JPG, JPEG, or BMP (Max 10MB)</p>
+            </div>
+            <input type="file" id="fileInput" class="file-input" accept=".png,.jpg,.jpeg,.bmp">
+        </div>
+
+        <div class="preview-section" id="previewSection">
+            <h3 style="color: #fff;">Preview:</h3>
+            <img id="previewImage" class="preview-image" alt="Answer sheet preview">
+            <div>
+                <button id="submitBtn" class="submit-btn">Submit Answer Sheet</button>
+            </div>
+        </div>
+
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%;">0%</div>
+            </div>
+            <p style="color: #ccc; text-align: center; margin-top: 10px;">Processing your answer sheet...</p>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+    </div>
+</div>
+
+<script>
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const previewSection = document.getElementById('previewSection');
+    const previewImage = document.getElementById('previewImage');
+    const submitBtn = document.getElementById('submitBtn');
+    const progressContainer = document.getElementById('progressContainer');
+    const progressFill = document.getElementById('progressFill');
+    const errorMessage = document.getElementById('errorMessage');
+    const shareCode = '{{ share_code }}';
+
+    let selectedFile = null;
+
+    // Click to upload
+    uploadArea.addEventListener('click', () => fileInput.click());
+
+    // Drag and drop
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('dragover');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            handleFile(files[0]);
+        }
+    });
+
+    // File selection
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            handleFile(e.target.files[0]);
+        }
+    });
+
+    function handleFile(file) {
+        // Validate file type
+        const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/bmp'];
+        if (!validTypes.includes(file.type)) {
+            showError('Invalid file type. Please upload a PNG, JPG, JPEG, or BMP image.');
+            return;
+        }
+
+        // Validate file size (10MB)
+        if (file.size > 10 * 1024 * 1024) {
+            showError('File size exceeds 10MB. Please upload a smaller image.');
+            return;
+        }
+
+        selectedFile = file;
+
+        // Show preview
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            previewImage.src = e.target.result;
+            previewSection.classList.add('show');
+            hideError();
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // Submit answer sheet
+    submitBtn.addEventListener('click', async () => {
+        if (!selectedFile) return;
+
+        submitBtn.disabled = true;
+        progressContainer.classList.add('show');
+        hideError();
+
+        const formData = new FormData();
+        formData.append('answer_sheet', selectedFile);
+
+        try {
+            const response = await fetch(`/student/test/${shareCode}/submit/`, {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                progressFill.style.width = '100%';
+                progressFill.textContent = '100% - Complete!';
+
+                // Redirect to results page
+                setTimeout(() => {
+                    window.location.href = result.redirect_url;
+                }, 1000);
+            } else {
+                showError(result.error || 'Failed to process answer sheet. Please try again.');
+                submitBtn.disabled = false;
+                progressContainer.classList.remove('show');
+            }
+        } catch (error) {
+            showError('An error occurred while uploading. Please try again.');
+            submitBtn.disabled = false;
+            progressContainer.classList.remove('show');
+        }
+    });
+
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.classList.add('show');
+    }
+
+    function hideError() {
+        errorMessage.classList.remove('show');
+    }
+</script>
+{% endblock %}

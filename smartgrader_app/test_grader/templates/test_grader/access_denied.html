@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Test Not Found - SmartGrader{% endblock %}
+{% block title %}Access Denied - SmartGrader{% endblock %}
 
 {% block content %}
 <style>
@@ -16,7 +16,7 @@
 
     .error-icon {
         font-size: 80px;
-        color: #9E9E9E;
+        color: #f44336;
         margin-bottom: 20px;
     }
 
@@ -52,9 +52,9 @@
 </style>
 
 <div class="error-container">
-    <i class='bx bx-search-alt error-icon'></i>
-    <h1>Test Not Found</h1>
-    <p>{{ message|default:"The test you're looking for doesn't exist or has been removed. Please check the share code and try again." }}</p>
+    <i class='bx bx-lock-alt error-icon'></i>
+    <h1>Access Denied</h1>
+    <p>{{ message|default:"You do not have permission to access this page." }}</p>
     <a href="/" class="btn-home">Go to Home</a>
 </div>
 {% endblock %}

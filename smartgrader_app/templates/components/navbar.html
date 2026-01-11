@@ -12,9 +12,16 @@
 
     <ul class="menu">
         {% if request.user.is_authenticated %}
+            {% if request.user.profile.role == 'student' %}
+                <li><a href="{% url 'student-dashboard' %}">Dashboard</a></li>
+            {% endif %}
+            <li><a href="{% url 'help' %}">Help</a></li>
+            <li><a href="{% url 'information' %}">About</a></li>
             <li class="user-chip">Hi, {{ request.user.email }}</li>
             <li><a href="{% url 'logout' %}" class="logout-btn">Logout</a></li>
         {% else %}
+            <li><a href="{% url 'help' %}">Help</a></li>
+            <li><a href="{% url 'information' %}">About</a></li>
             <li><a href="{% url 'register' %}" class="signup-btn">Sign Up</a></li>
             <li><a href="{% url 'login' %}" class="login-btn">Login</a></li>
         {% endif %}

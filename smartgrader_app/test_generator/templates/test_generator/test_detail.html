@@ -26,6 +26,13 @@
     </header>
 
     <section class="detail-stack">
+        <div class="panel share-code-panel">
+            <h2>Student Access</h2>
+            <div id="shareCodeContainer" data-test-id="{{ test.id }}">
+                <p style="color: #888;">Loading share code information...</p>
+            </div>
+        </div>
+
         <div class="panel upload-panel">
             <h2>Upload Submissions</h2>
             <div id="upload-drop-zone" class="upload-drop-zone">
@@ -132,4 +139,5 @@
 <script src="{% static 'test_generator/js/test_generator.js' %}"></script>
 <script src="{% static 'test_generator/js/test_detail.js' %}"></script>
 <script src="{% static 'test_grader/js/test_submissions.js' %}"></script>
+<script src="{% static 'test_grader/js/share_code.js' %}"></script>
 {% endblock %}

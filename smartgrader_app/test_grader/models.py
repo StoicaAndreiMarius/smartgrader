@@ -11,6 +11,11 @@ class Test(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     num_questions = models.IntegerField()
     num_options = models.IntegerField(default=5)
+
+    # Student access fields
+    share_code = models.CharField(max_length=12, unique=True, blank=True, null=True, db_index=True)
+    is_open_for_submissions = models.BooleanField(default=False)
+    allow_multiple_submissions = models.BooleanField(default=False)
     
     class Meta:
         ordering = ['-created_at']
@@ -36,6 +41,13 @@ class Submission(models.Model):
     
     class Meta:
         ordering = ['-submitted_at']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['test', 'student_user'],
+                condition=models.Q(student_user__isnull=False),
+                name='unique_student_submission'
+            )
+        ]
     
     @property
     def full_name(self):

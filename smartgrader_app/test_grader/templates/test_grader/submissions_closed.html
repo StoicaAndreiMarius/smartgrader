@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Test Not Found - SmartGrader{% endblock %}
+{% block title %}Submissions Closed - SmartGrader{% endblock %}
 
 {% block content %}
 <style>
@@ -16,7 +16,7 @@
 
     .error-icon {
         font-size: 80px;
-        color: #9E9E9E;
+        color: #FF9800;
         margin-bottom: 20px;
     }
 
@@ -31,6 +31,19 @@
         font-size: 1.1em;
         line-height: 1.6;
         margin-bottom: 30px;
+    }
+
+    .test-info {
+        background: #333;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+    }
+
+    .test-info h2 {
+        color: #fff;
+        font-size: 1.3em;
+        margin-bottom: 10px;
     }
 
     .btn-home {
@@ -52,9 +65,16 @@
 </style>
 
 <div class="error-container">
-    <i class='bx bx-search-alt error-icon'></i>
-    <h1>Test Not Found</h1>
-    <p>{{ message|default:"The test you're looking for doesn't exist or has been removed. Please check the share code and try again." }}</p>
+    <i class='bx bx-time-five error-icon'></i>
+    <h1>Submissions Closed</h1>
+
+    {% if test %}
+    <div class="test-info">
+        <h2>{{ test.title }}</h2>
+    </div>
+    {% endif %}
+
+    <p>{{ message|default:"This test is not currently accepting submissions. Please contact your teacher for more information." }}</p>
     <a href="/" class="btn-home">Go to Home</a>
 </div>
 {% endblock %}
