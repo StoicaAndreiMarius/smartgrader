@@ -1,15 +1,14 @@
 @import url('variables.css');
 
 .app-footer {
-    /* Use a darker background color for a heavier appearance */
-    background-color: var(--footer-dark-bg, #1c1c1c); 
-    padding: 15px 0; /* Reduced padding for a thinner look */
+    background-color: var(--footer-dark-bg, #1c1c1c);
+    padding: 20px 0;
     font-family: var(--font-stack, sans-serif);
-    /* Remove the top border to simplify the look */
-    border-top: none; 
+    border-top: 1px solid #333;
     width: 100%;
     box-sizing: border-box;
-    flex-shrink: 0; 
+    flex-shrink: 0;
+    margin-top: 50px;
 }
 
 /* --- Content Wrapper (Uses Flexbox for distribution) --- */
