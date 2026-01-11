@@ -180,15 +180,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const parseCorrectAnswer = (q) => {
             let answer = q.correct_answer !== undefined ? q.correct_answer :
-                        (q.correctAnswer !== undefined ? q.correctAnswer : 0);
-            return typeof answer === 'string' ? parseInt(answer) : answer;
+                        (q.correctAnswer !== undefined ? q.correctAnswer : [0]);
+
+            // Normalize to array format
+            if (Array.isArray(answer)) {
+                return answer;
+            } else if (typeof answer === 'number') {
+                return [answer];
+            } else if (typeof answer === 'string') {
+                return [parseInt(answer)];
+            }
+            return [0];
         };
 
         if (Array.isArray(data)) {
             return data.map(q => ({
                 question: q.question || q.text || q.questionText || '',
                 options: q.options || q.answers || q.choices || [],
-                correct_answer: parseCorrectAnswer(q)
+                correct_answer: parseCorrectAnswer(q),
+                grading_mode: q.grading_mode || q.gradingMode || 'all_or_nothing'
             }));
         }
 
@@ -196,7 +206,8 @@ document.addEventListener('DOMContentLoaded', function() {
             return data.questions.map(q => ({
                 question: q.question || q.text || q.questionText || '',
                 options: q.options || q.answers || q.choices || [],
-                correct_answer: parseCorrectAnswer(q)
+                correct_answer: parseCorrectAnswer(q),
+                grading_mode: q.grading_mode || q.gradingMode || 'all_or_nothing'
             }));
         }
 
@@ -217,13 +228,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (values.length >= 3) {
                 const question = values[0];
-                const correctAnswer = parseInt(values[values.length - 1]) || 0;
+                const correctAnswerStr = values[values.length - 1];
+                let correctAnswers = [];
+
+                if (correctAnswerStr.includes(',')) {
+                    // Multiple answers: "0,2,4"
+                    correctAnswers = correctAnswerStr.split(',')
+                        .map(s => parseInt(s.trim()))
+                        .filter(n => !isNaN(n));
+                } else {
+                    // Single answer
+                    correctAnswers = [parseInt(correctAnswerStr) || 0];
+                }
+
                 const options = values.slice(1, values.length - 1);
 
                 questions.push({
                     question: question,
                     options: options,
-                    correct_answer: correctAnswer
+                    correct_answer: correctAnswers,
+                    grading_mode: 'all_or_nothing'
                 });
             }
         }
@@ -284,8 +308,17 @@ document.addEventListener('DOMContentLoaded', function() {
             return div.innerHTML;
         };
 
+        // Normalize correct_answer to array
+        let correctAnswers = [];
+        if (Array.isArray(questionData.correct_answer)) {
+            correctAnswers = questionData.correct_answer;
+        } else if (typeof questionData.correct_answer === 'number') {
+            correctAnswers = [questionData.correct_answer];
+        }
+
         for (let i = 0; i < numOptions; i++) {
             const optionValue = escapeHtml(questionData.options[i] || '');
+            const isChecked = correctAnswers.includes(i);
             optionsHTML += `
                 <div class="option-group">
                     <label>Option ${optionLabels[i]}:</label>
@@ -295,10 +328,10 @@ document.addEventListener('DOMContentLoaded', function() {
                            value="${optionValue}"
                            required>
                     <div class="correct-answer-label">
-                        <input type="radio"
+                        <input type="checkbox"
                                name="question_${questionCount}_correct"
                                value="${i}"
-                               ${i === questionData.correct_answer ? 'checked' : ''}>
+                               ${isChecked ? 'checked' : ''}>
                         <span>Correct</span>
                     </div>
                 </div>
@@ -306,6 +339,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         const questionText = escapeHtml(questionData.question);
+        const gradingMode = questionData.grading_mode || 'all_or_nothing';
 
         questionCard.innerHTML = `
             <div class="question-header">
@@ -321,8 +355,16 @@ document.addEventListener('DOMContentLoaded', function() {
                           required>${questionText}</textarea>
             </div>
             <div class="options-container">
-                <label style="margin-bottom: 10px; display: block; color: #ddd;">Options & Correct Answer *</label>
+                <label style="margin-bottom: 10px; display: block; color: #ddd;">Options & Correct Answers * (Check all that apply)</label>
                 ${optionsHTML}
+            </div>
+            <div class="grading-mode-group">
+                <label>Grading Mode:</label>
+                <select name="question_${questionCount}_grading_mode" class="grading-mode-select">
+                    <option value="all_or_nothing" ${gradingMode === 'all_or_nothing' ? 'selected' : ''}>All or Nothing</option>
+                    <option value="partial_credit" ${gradingMode === 'partial_credit' ? 'selected' : ''}>Partial Credit</option>
+                </select>
+                <small style="display: block; margin-top: 5px; color: #999;">All or Nothing: Must mark all correct. Partial Credit: Proportional points.</small>
             </div>
         `;
 
@@ -355,7 +397,7 @@ document.addEventListener('DOMContentLoaded', function() {
                            placeholder="Enter option ${optionLabels[i]}"
                            required>
                     <div class="correct-answer-label">
-                        <input type="radio"
+                        <input type="checkbox"
                                name="question_${questionCount}_correct"
                                value="${i}"
                                ${i === 0 ? 'checked' : ''}>
@@ -379,8 +421,16 @@ document.addEventListener('DOMContentLoaded', function() {
                           required></textarea>
             </div>
             <div class="options-container">
-                <label style="margin-bottom: 10px; display: block; color: #ddd;">Options & Correct Answer *</label>
+                <label style="margin-bottom: 10px; display: block; color: #ddd;">Options & Correct Answers * (Check all that apply)</label>
                 ${optionsHTML}
+            </div>
+            <div class="grading-mode-group">
+                <label>Grading Mode:</label>
+                <select name="question_${questionCount}_grading_mode" class="grading-mode-select">
+                    <option value="all_or_nothing" selected>All or Nothing</option>
+                    <option value="partial_credit">Partial Credit</option>
+                </select>
+                <small style="display: block; margin-top: 5px; color: #999;">All or Nothing: Must mark all correct. Partial Credit: Proportional points.</small>
             </div>
         `;
 
@@ -401,14 +451,20 @@ document.addEventListener('DOMContentLoaded', function() {
         const optionLabels = ['A', 'B', 'C', 'D', 'E'];
 
         const currentValues = [];
-        const currentCorrect = card.querySelector(`input[name="question_${questionId}_correct"]:checked`)?.value || '0';
+        const currentCorrect = [];
 
+        // Collect currently checked checkboxes
         for (let i = 0; i < 5; i++) {
             const input = card.querySelector(`input[name="question_${questionId}_option_${i}"]`);
             currentValues[i] = input ? input.value : '';
+
+            const checkbox = card.querySelector(`input[name="question_${questionId}_correct"][value="${i}"]`);
+            if (checkbox && checkbox.checked) {
+                currentCorrect.push(i);
+            }
         }
 
-        let optionsHTML = '<label style="margin-bottom: 10px; display: block; color: #ddd;">Options & Correct Answer *</label>';
+        let optionsHTML = '<label style="margin-bottom: 10px; display: block; color: #ddd;">Options & Correct Answers * (Check all that apply)</label>';
 
         for (let i = 0; i < numOptions; i++) {
             optionsHTML += `
@@ -420,10 +476,10 @@ document.addEventListener('DOMContentLoaded', function() {
                            value="${currentValues[i] || ''}"
                            required>
                     <div class="correct-answer-label">
-                        <input type="radio"
+                        <input type="checkbox"
                                name="question_${questionId}_correct"
                                value="${i}"
-                               ${i === parseInt(currentCorrect) ? 'checked' : ''}>
+                               ${currentCorrect.includes(i) ? 'checked' : ''}>
                         <span>Correct</span>
                     </div>
                 </div>
@@ -464,7 +520,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const options = [];
-            let correctAnswer = 0;
+            const correctAnswers = [];
 
             for (let i = 0; i < numOptions; i++) {
                 const optionInput = card.querySelector(`input[name="question_${questionId}_option_${i}"]`);
@@ -476,17 +532,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 options.push(optionValue);
+
+                // Check if this option is marked as correct
+                const correctCheckbox = card.querySelector(`input[name="question_${questionId}_correct"][value="${i}"]`);
+                if (correctCheckbox && correctCheckbox.checked) {
+                    correctAnswers.push(i);
+                }
             }
 
-            const correctRadio = card.querySelector(`input[name="question_${questionId}_correct"]:checked`);
-            if (correctRadio) {
-                correctAnswer = parseInt(correctRadio.value);
+            // Validate that at least one correct answer is selected
+            if (correctAnswers.length === 0) {
+                showError(`Please select at least one correct answer for question ${index + 1}`);
+                return;
             }
+
+            // Get grading mode
+            const gradingModeSelect = card.querySelector(`select[name="question_${questionId}_grading_mode"]`);
+            const gradingMode = gradingModeSelect ? gradingModeSelect.value : 'all_or_nothing';
 
             questions.push({
                 question: questionText,
                 options: options,
-                correct_answer: correctAnswer
+                correct_answer: correctAnswers,
+                grading_mode: gradingMode
             });
         });
 

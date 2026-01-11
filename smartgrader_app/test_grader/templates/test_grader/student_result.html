@@ -1,0 +1,297 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Test Results - {{ test.title }}{% endblock %}
+
+{% block content %}
+<style>
+    .results-container {
+        max-width: 1000px;
+        margin: 50px auto;
+        padding: 30px;
+        background: #2a2a2a;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .results-header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #444;
+    }
+
+    .results-header h1 {
+        color: #fff;
+        font-size: 2em;
+        margin-bottom: 10px;
+    }
+
+    .score-summary {
+        display: flex;
+        justify-content: space-around;
+        margin: 30px 0;
+        padding: 25px;
+        background: #333;
+        border-radius: 8px;
+    }
+
+    .score-item {
+        text-align: center;
+    }
+
+    .score-label {
+        color: #aaa;
+        font-size: 0.9em;
+        margin-bottom: 8px;
+    }
+
+    .score-value {
+        color: #fff;
+        font-size: 2em;
+        font-weight: bold;
+    }
+
+    .score-value.grade {
+        font-size: 3em;
+    }
+
+    .grade-A { color: #4CAF50; }
+    .grade-B { color: #8BC34A; }
+    .grade-C { color: #FFC107; }
+    .grade-D { color: #FF9800; }
+    .grade-F { color: #f44336; }
+
+    .answer-details {
+        margin-top: 30px;
+    }
+
+    .answer-details h2 {
+        color: #fff;
+        margin-bottom: 20px;
+        font-size: 1.5em;
+    }
+
+    .question-card {
+        background: #333;
+        padding: 20px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #666;
+    }
+
+    .question-card.correct {
+        border-left-color: #4CAF50;
+    }
+
+    .question-card.incorrect {
+        border-left-color: #f44336;
+    }
+
+    .question-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+
+    .question-number {
+        background: #444;
+        color: #fff;
+        padding: 8px 15px;
+        border-radius: 6px;
+        font-weight: bold;
+        margin-right: 15px;
+    }
+
+    .question-text {
+        color: #fff;
+        font-size: 1.1em;
+        flex: 1;
+    }
+
+    .status-icon {
+        font-size: 24px;
+        margin-left: 10px;
+    }
+
+    .status-icon.correct {
+        color: #4CAF50;
+    }
+
+    .status-icon.incorrect {
+        color: #f44336;
+    }
+
+    .answer-comparison {
+        display: flex;
+        gap: 30px;
+        margin-top: 15px;
+    }
+
+    .answer-box {
+        flex: 1;
+    }
+
+    .answer-box-label {
+        color: #aaa;
+        font-size: 0.9em;
+        margin-bottom: 8px;
+    }
+
+    .answer-box-value {
+        color: #fff;
+        font-size: 1.1em;
+        padding: 10px 15px;
+        background: #2a2a2a;
+        border-radius: 6px;
+    }
+
+    .answer-box-value.correct-answer {
+        border: 1px solid #4CAF50;
+    }
+
+    .answer-box-value.student-answer {
+        border: 1px solid #2196F3;
+    }
+
+    .answer-box-value.wrong {
+        border: 1px solid #f44336;
+    }
+
+    .submitted-image {
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    .submitted-image h3 {
+        color: #fff;
+        margin-bottom: 15px;
+    }
+
+    .submitted-image img {
+        max-width: 100%;
+        max-height: 500px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .action-buttons {
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    .btn {
+        padding: 12px 25px;
+        margin: 0 10px;
+        border: none;
+        border-radius: 6px;
+        font-size: 1em;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        transition: background 0.3s;
+    }
+
+    .btn-primary {
+        background: #2196F3;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #1976D2;
+    }
+
+    .btn-secondary {
+        background: #666;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background: #555;
+    }
+</style>
+
+<div class="results-container">
+    <div class="results-header">
+        <h1>Test Results</h1>
+        <p style="color: #aaa; font-size: 1.1em;">{{ test.title }}</p>
+        <p style="color: #888; font-size: 0.9em;">Submitted: {{ submission.submitted_at|date:"M d, Y g:i A" }}</p>
+    </div>
+
+    <div class="score-summary">
+        <div class="score-item">
+            <div class="score-label">Score</div>
+            <div class="score-value">{{ submission.score|floatformat:1 }}/{{ submission.total_questions }}</div>
+        </div>
+        <div class="score-item">
+            <div class="score-label">Percentage</div>
+            <div class="score-value">{{ submission.percentage|floatformat:1 }}%</div>
+        </div>
+        <div class="score-item">
+            <div class="score-label">Grade</div>
+            <div class="score-value grade grade-{{ submission.grade }}">{{ submission.grade }}</div>
+        </div>
+    </div>
+
+    <div class="answer-details">
+        <h2>Question-by-Question Breakdown</h2>
+
+        {% for detail in answer_details %}
+        <div class="question-card {% if detail.is_correct %}correct{% else %}incorrect{% endif %}">
+            <div class="question-header">
+                <div class="question-number">Q{{ detail.question_num }}</div>
+                <div class="question-text">{{ detail.question_text }}</div>
+                <div class="status-icon {% if detail.is_correct %}correct{% else %}incorrect{% endif %}">
+                    {% if detail.is_correct %}
+                        <i class='bx bx-check-circle'></i>
+                    {% else %}
+                        <i class='bx bx-x-circle'></i>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="answer-comparison">
+                <div class="answer-box">
+                    <div class="answer-box-label">Your Answer</div>
+                    <div class="answer-box-value student-answer {% if not detail.is_correct %}wrong{% endif %}">
+                        {% if detail.student_answer is None %}
+                            <em>Not answered</em>
+                        {% elif detail.student_answer is sequence and detail.student_answer is not string %}
+                            {% for ans in detail.student_answer %}
+                                {{ "ABCDEFGHIJ"|slice:ans|last }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            {{ "ABCDEFGHIJ"|slice:detail.student_answer|last }}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="answer-box">
+                    <div class="answer-box-label">Correct Answer</div>
+                    <div class="answer-box-value correct-answer">
+                        {% if detail.correct_answer is sequence and detail.correct_answer is not string %}
+                            {% for ans in detail.correct_answer %}
+                                {{ "ABCDEFGHIJ"|slice:ans|last }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            {{ "ABCDEFGHIJ"|slice:detail.correct_answer|last }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="submitted-image">
+        <h3>Your Submitted Answer Sheet</h3>
+        <img src="{{ submission.image.url }}" alt="Submitted answer sheet">
+    </div>
+
+    <div class="action-buttons">
+        {% if test.allow_multiple_submissions %}
+            <a href="{% url 'student-test-access' share_code %}" class="btn btn-primary">Submit Again</a>
+        {% endif %}
+        <button onclick="window.print()" class="btn btn-secondary">Print Results</button>
+    </div>
+</div>
+{% endblock %}

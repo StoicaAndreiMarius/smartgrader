@@ -93,11 +93,22 @@ def _build_questions(payload):
     questions = []
     letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     for idx_q, q in enumerate(payload.get("questions", []), start=1):
-        correct_index = int(q.get("correct_answer", 0))
+        # Handle correct_answer as either a single value or a list
+        correct_answer_raw = q.get("correct_answer", 0)
+        if isinstance(correct_answer_raw, list):
+            correct_indices = set(correct_answer_raw)
+        elif isinstance(correct_answer_raw, int):
+            correct_indices = {correct_answer_raw}
+        else:
+            try:
+                correct_indices = {int(correct_answer_raw)}
+            except (TypeError, ValueError):
+                correct_indices = {0}
+
         opts = []
         for idx, text in enumerate(q.get("options", [])):
             label = letters[idx] if idx < len(letters) else str(idx + 1)
-            opts.append({"label": label, "text": text, "is_correct": idx == correct_index})
+            opts.append({"label": label, "text": text, "is_correct": idx in correct_indices})
         questions.append(
             {
                 "id": q.get("id") or q.get("question_id") or q.get("uuid") or idx_q,
@@ -374,10 +385,16 @@ def _build_pdf_payload(entry):
             else:
                 options.append(str(opt))
 
-        try:
-            correct_answer = int(q.get("correct_answer", 0))
-        except (TypeError, ValueError):
-            correct_answer = 0
+        # Handle both int and list format for correct_answer
+        correct_answer_raw = q.get("correct_answer", 0)
+        if isinstance(correct_answer_raw, list):
+            # For PDF, just use first answer (not displayed to students anyway)
+            correct_answer = correct_answer_raw[0] if correct_answer_raw else 0
+        else:
+            try:
+                correct_answer = int(correct_answer_raw)
+            except (TypeError, ValueError):
+                correct_answer = 0
 
         data["questions"].append(
             {
@@ -506,9 +523,12 @@ def ai_generate_questions(request):
         "{\n"
         '    \"question\": \"The question text\",\n'
         f'    \"options\": [\"Option A text\", \"Option B text\", \"Option C text\"{extra_options}],\n'
-        '    \"correct_answer\": 0\n'
+        '    \"correct_answer\": [0],\n'
+        '    \"grading_mode\": \"all_or_nothing\"\n'
         "}\n\n"
-        f"Where correct_answer is the index (0-{num_options - 1}) of the correct option.\n\n"
+        f"Where correct_answer is an ARRAY of indices (0-{num_options - 1}) of correct options.\n"
+        "Use [index] for single correct answer, [index1, index2, ...] for multiple correct answers.\n"
+        "Set grading_mode to 'all_or_nothing' for single answers or 'partial_credit' for multiple correct answers.\n\n"
         f"Return a JSON array of {num_questions} questions. Make the questions educational, clear, and appropriately challenging for {difficulty} level.\n"
         f"Ensure each question tests understanding of {topic}."
     )
@@ -542,21 +562,37 @@ def ai_generate_questions(request):
 
         text = (q.get("question") or q.get("text") or "").strip()
         options = q.get("options") or []
-        try:
-            correct_index = int(q.get("correct_answer", 0))
-        except (TypeError, ValueError):
-            correct_index = 0
+
+        # Parse correct_answer - support both array and int formats
+        correct_answer_raw = q.get("correct_answer", [0])
+        if isinstance(correct_answer_raw, list):
+            correct_indices = correct_answer_raw
+        elif isinstance(correct_answer_raw, int):
+            correct_indices = [correct_answer_raw]
+        else:
+            try:
+                correct_indices = [int(correct_answer_raw)]
+            except (TypeError, ValueError):
+                correct_indices = [0]
+
+        grading_mode = q.get("grading_mode", "all_or_nothing")
 
         if not text or not isinstance(options, list) or len(options) != num_options:
             continue
-        if correct_index < 0 or correct_index >= num_options:
+
+        # Validate all indices are in range
+        if not all(0 <= idx < num_options for idx in correct_indices):
+            continue
+
+        if len(correct_indices) == 0:
             continue
 
         validated_questions.append(
             {
                 "question": text,
                 "options": [str(opt).strip() for opt in options],
-                "correct_answer": correct_index,
+                "correct_answer": correct_indices,
+                "grading_mode": grading_mode,
             }
         )
 

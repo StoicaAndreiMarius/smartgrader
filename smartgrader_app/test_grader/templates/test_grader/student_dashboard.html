@@ -1,0 +1,296 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Student Dashboard - SmartGrader{% endblock %}
+
+{% block content %}
+<style>
+    .dashboard-container {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 30px;
+    }
+
+    .welcome-section {
+        background: #2a2a2a;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .welcome-section h1 {
+        color: #fff;
+        font-size: 2.5em;
+        margin-bottom: 15px;
+    }
+
+    .welcome-section p {
+        color: #aaa;
+        font-size: 1.2em;
+        margin-bottom: 10px;
+    }
+
+    .join-test-section {
+        background: #2a2a2a;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .join-test-section h2 {
+        color: #fff;
+        font-size: 1.8em;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .code-input-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .code-input-wrapper {
+        position: relative;
+    }
+
+    .code-input {
+        width: 100%;
+        padding: 18px 20px;
+        background: #1c1c1c;
+        border: 2px solid #444;
+        border-radius: 8px;
+        color: #fff;
+        font-size: 1.3em;
+        text-align: center;
+        letter-spacing: 4px;
+        font-family: monospace;
+        text-transform: uppercase;
+        transition: border-color 0.3s;
+    }
+
+    .code-input:focus {
+        outline: none;
+        border-color: #4CAF50;
+    }
+
+    .code-input::placeholder {
+        color: #666;
+        letter-spacing: 2px;
+    }
+
+    .join-btn {
+        background: #4CAF50;
+        color: white;
+        padding: 18px 40px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.2em;
+        cursor: pointer;
+        transition: background 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .join-btn:hover {
+        background: #45a049;
+    }
+
+    .join-btn:disabled {
+        background: #555;
+        cursor: not-allowed;
+    }
+
+    .error-box {
+        background: #f44336;
+        color: white;
+        padding: 15px;
+        border-radius: 6px;
+        display: none;
+        text-align: center;
+    }
+
+    .error-box.show {
+        display: block;
+    }
+
+    .instructions {
+        background: #333;
+        padding: 25px;
+        border-radius: 8px;
+        margin-top: 30px;
+    }
+
+    .instructions h3 {
+        color: #fff;
+        font-size: 1.3em;
+        margin-bottom: 15px;
+    }
+
+    .instructions ol {
+        color: #ccc;
+        line-height: 1.8;
+        margin-left: 20px;
+    }
+
+    .instructions li {
+        margin: 10px 0;
+    }
+
+    .recent-tests {
+        margin-top: 40px;
+    }
+
+    .recent-tests h2 {
+        color: #fff;
+        font-size: 1.5em;
+        margin-bottom: 20px;
+    }
+
+    .test-card {
+        background: #2a2a2a;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        border-left: 4px solid #4CAF50;
+    }
+
+    .test-card h3 {
+        color: #fff;
+        margin-bottom: 10px;
+    }
+
+    .test-card p {
+        color: #aaa;
+        margin: 5px 0;
+    }
+
+    .test-card .view-result-btn {
+        background: #2196F3;
+        color: white;
+        padding: 8px 20px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 10px;
+        transition: background 0.3s;
+    }
+
+    .test-card .view-result-btn:hover {
+        background: #1976D2;
+    }
+</style>
+
+<div class="dashboard-container">
+    <div class="welcome-section">
+        <h1>Welcome, {{ request.user.first_name }}!</h1>
+        <p>Enter your test code below to get started</p>
+    </div>
+
+    <div class="join-test-section">
+        <h2>Join a Test</h2>
+        <div class="code-input-container">
+            <div class="code-input-wrapper">
+                <input
+                    type="text"
+                    id="shareCodeInput"
+                    class="code-input"
+                    placeholder="XXXX-XXXX-XXXX"
+                    maxlength="14"
+                >
+            </div>
+            <button id="joinTestBtn" class="join-btn">
+                <i class='bx bx-log-in'></i>
+                Join Test
+            </button>
+            <div id="errorBox" class="error-box"></div>
+        </div>
+
+        <div class="instructions">
+            <h3>How to Join a Test:</h3>
+            <ol>
+                <li>Get the test code from your teacher</li>
+                <li>Enter the code in the field above</li>
+                <li>Click "Join Test"</li>
+                <li>Upload your completed answer sheet</li>
+                <li>View your results instantly!</li>
+            </ol>
+        </div>
+    </div>
+
+    {% if recent_submissions %}
+    <div class="recent-tests">
+        <h2>Your Recent Submissions</h2>
+        {% for submission in recent_submissions %}
+        <div class="test-card">
+            <h3>{{ submission.test.title }}</h3>
+            <p><strong>Score:</strong> {{ submission.score }}/{{ submission.total_questions }} ({{ submission.percentage|floatformat:1 }}%)</p>
+            <p><strong>Grade:</strong> {{ submission.grade }}</p>
+            <p><strong>Submitted:</strong> {{ submission.submitted_at|date:"M d, Y g:i A" }}</p>
+            {% if submission.test.share_code %}
+            <a href="{% url 'student-submission-result' submission.test.share_code submission.id %}" class="view-result-btn">
+                View Results
+            </a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    const codeInput = document.getElementById('shareCodeInput');
+    const joinBtn = document.getElementById('joinTestBtn');
+    const errorBox = document.getElementById('errorBox');
+
+    // Auto-format code input
+    codeInput.addEventListener('input', (e) => {
+        let value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+
+        // Format as XXXX-XXXX-XXXX
+        if (value.length > 0) {
+            value = value.match(/.{1,4}/g).join('-');
+        }
+
+        e.target.value = value;
+    });
+
+    // Handle Enter key
+    codeInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            joinTest();
+        }
+    });
+
+    // Join button click
+    joinBtn.addEventListener('click', joinTest);
+
+    function joinTest() {
+        const code = codeInput.value.replace(/-/g, '');
+
+        if (!code || code.length < 8) {
+            showError('Please enter a valid test code');
+            return;
+        }
+
+        // Redirect to student test access page
+        window.location.href = `/student/test/${code}/`;
+    }
+
+    function showError(message) {
+        errorBox.textContent = message;
+        errorBox.classList.add('show');
+        setTimeout(() => {
+            errorBox.classList.remove('show');
+        }, 5000);
+    }
+</script>
+{% endblock %}

@@ -1,34 +1,46 @@
 <aside class="sidebar">
-    <div class="sidebar-section">
-        <ul class="nav-list">
-            <li>
-                <a href="#" class="nav-link active">
-                    <i class='bx bx-grid-alt'></i>
-                    <span>Dashboard</span>
-                </a>
-            </li>
-            <li>
-                <a href="#" class="nav-link">
-                    <i class='bx bx-check-shield'></i>
-                    <span>Test Grader</span>
-                </a>
-            </li>
-            {% if request.user.is_authenticated and request.user.profile.role == 'teacher' %}
-            <li>
-                <a href="/tests/" class="nav-link">
-                    <i class='bx bx-grid-alt'></i>
-                    <span>Tests</span>
-                </a>
-            </li>
-            <li>
-                <a href="#" class="nav-link" data-open="test-generator">
-                    <i class='bx bx-file'></i>
-                    <span>Test Generator</span>
-                </a>
-            </li>
-            {% endif %}
-        </ul>
-    </div>
+    {% if request.user.is_authenticated %}
+        <div class="sidebar-section">
+            <ul class="nav-list">
+                {% if request.user.profile.role == 'teacher' %}
+                    <li>
+                        <a href="/tests/" class="nav-link">
+                            <i class='bx bx-list-ul'></i>
+                            <span>My Tests</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link" data-open="test-generator">
+                            <i class='bx bx-file'></i>
+                            <span>Test Generator</span>
+                        </a>
+                    </li>
+                {% elif request.user.profile.role == 'student' %}
+                    <li>
+                        <a href="{% url 'student-dashboard' %}" class="nav-link">
+                            <i class='bx bx-grid-alt'></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
 
-    
+        <div class="sidebar-section">
+            <ul class="nav-list">
+                <li>
+                    <a href="{% url 'help' %}" class="nav-link">
+                        <i class='bx bx-support'></i>
+                        <span>Help</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'information' %}" class="nav-link">
+                        <i class='bx bx-info-circle'></i>
+                        <span>About</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    {% endif %}
 </aside>
