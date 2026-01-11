@@ -147,8 +147,8 @@
             
             {% if not request.user.is_authenticated %}
                 <div class="cta-buttons">
-                    <a href="#" class="btn btn-login">Login</a>
-                    <a href="#" class="btn btn-create">Create Account</a>
+                    <a href="{% url 'login' %}" class="btn btn-login">Login</a>
+                    <a href="{% url 'register' %}" class="btn btn-create">Create Account</a>
                 </div>
             {% endif %}
         </div>

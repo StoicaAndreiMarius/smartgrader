@@ -13,7 +13,8 @@ class ShareCodeManager {
         // Bind event listeners
         const generateBtn = document.getElementById('generateShareCodeBtn');
         const regenerateBtn = document.getElementById('regenerateShareCodeBtn');
-        const copyBtn = document.getElementById('copyShareLinkBtn');
+        const copyLinkBtn = document.getElementById('copyShareLinkBtn');
+        const copyCodeBtn = document.getElementById('copyShareCodeBtn');
         const toggleSwitch = document.getElementById('submissionsToggle');
 
         if (generateBtn) {
@@ -24,8 +25,12 @@ class ShareCodeManager {
             regenerateBtn.addEventListener('click', () => this.regenerateShareCode());
         }
 
-        if (copyBtn) {
-            copyBtn.addEventListener('click', () => this.copyShareLink());
+        if (copyLinkBtn) {
+            copyLinkBtn.addEventListener('click', () => this.copyShareLink());
+        }
+
+        if (copyCodeBtn) {
+            copyCodeBtn.addEventListener('click', () => this.copyShareCode());
         }
 
         if (toggleSwitch) {
@@ -106,29 +111,74 @@ class ShareCodeManager {
         }
     }
 
+    copyToClipboard(text, buttonId, successMessage) {
+        // Try modern clipboard API first
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => {
+                this.showCopySuccess(buttonId, successMessage);
+            }).catch(err => {
+                // Fallback to older method
+                this.copyToClipboardFallback(text, buttonId, successMessage);
+            });
+        } else {
+            // Use fallback method
+            this.copyToClipboardFallback(text, buttonId, successMessage);
+        }
+    }
+
+    copyToClipboardFallback(text, buttonId, successMessage) {
+        // Create temporary textarea
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        try {
+            document.execCommand('copy');
+            this.showCopySuccess(buttonId, successMessage);
+        } catch (err) {
+            console.error('Failed to copy:', err);
+            this.showNotification('Failed to copy. Please copy manually.', 'error');
+        } finally {
+            document.body.removeChild(textarea);
+        }
+    }
+
+    showCopySuccess(buttonId, message) {
+        this.showNotification(message, 'success');
+
+        const copyBtn = document.getElementById(buttonId);
+        if (copyBtn) {
+            const originalHTML = copyBtn.innerHTML;
+            const originalBg = copyBtn.style.background;
+
+            copyBtn.innerHTML = '<i class="bx bx-check"></i> Copied!';
+            copyBtn.style.background = '#4CAF50';
+            copyBtn.disabled = true;
+
+            setTimeout(() => {
+                copyBtn.innerHTML = originalHTML;
+                copyBtn.style.background = originalBg;
+                copyBtn.disabled = false;
+            }, 2000);
+        }
+    }
+
     copyShareLink() {
         const shareLink = document.getElementById('shareLink');
         if (shareLink) {
-            const link = shareLink.textContent;
+            const link = shareLink.textContent.trim();
+            this.copyToClipboard(link, 'copyShareLinkBtn', 'Link copied to clipboard!');
+        }
+    }
 
-            // Copy to clipboard
-            navigator.clipboard.writeText(link).then(() => {
-                this.showNotification('Link copied to clipboard!', 'success');
-
-                // Visual feedback
-                const copyBtn = document.getElementById('copyShareLinkBtn');
-                const originalText = copyBtn.innerHTML;
-                copyBtn.innerHTML = '<i class="bx bx-check"></i> Copied!';
-                copyBtn.style.background = '#4CAF50';
-
-                setTimeout(() => {
-                    copyBtn.innerHTML = originalText;
-                    copyBtn.style.background = '';
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy:', err);
-                this.showNotification('Failed to copy link', 'error');
-            });
+    copyShareCode() {
+        const codeElement = document.getElementById('shareCodeText');
+        if (codeElement) {
+            const code = codeElement.textContent.trim();
+            this.copyToClipboard(code, 'copyShareCodeBtn', 'Code copied to clipboard!');
         }
     }
 
@@ -146,7 +196,10 @@ class ShareCodeManager {
                 </div>
 
                 <div class="share-code-box">
-                    <div class="code-formatted">${data.formatted_code || data.share_code}</div>
+                    <div class="code-formatted" id="shareCodeText">${data.formatted_code || data.share_code}</div>
+                    <button id="copyShareCodeBtn" class="btn-copy-code">
+                        <i class='bx bx-copy'></i> Copy Code
+                    </button>
                 </div>
 
                 <div class="share-link-box">

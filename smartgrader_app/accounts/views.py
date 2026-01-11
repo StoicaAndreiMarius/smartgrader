@@ -95,7 +95,14 @@ def login_user(request):
 
     login(request, user)
 
-    return JsonResponse({"message": "Login successful", "email": user.email})
+    # Get user role
+    role = getattr(user.profile, 'role', 'student') if hasattr(user, 'profile') else 'student'
+
+    return JsonResponse({
+        "message": "Login successful",
+        "email": user.email,
+        "role": role
+    })
 
 
 def logout_user(request):

@@ -649,6 +649,10 @@
     border-radius: 8px;
     text-align: center;
     border: 2px dashed #666;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
 }
 
 .code-formatted {
@@ -657,6 +661,47 @@
     color: #4CAF50;
     font-family: monospace;
     letter-spacing: 4px;
+    user-select: all;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.code-formatted:hover {
+    background: rgba(76, 175, 80, 0.1);
+}
+
+.btn-copy-code {
+    background: #4CAF50;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 1em;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn-copy-code:hover {
+    background: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.btn-copy-code:active {
+    transform: translateY(0);
+}
+
+.btn-copy-code:disabled {
+    background: #888;
+    cursor: not-allowed;
+    transform: none;
 }
 
 .share-link-box {
@@ -687,6 +732,13 @@
     word-break: break-all;
     font-family: monospace;
     font-size: 0.9em;
+    user-select: all;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.link-container span:hover {
+    background: #252525;
 }
 
 .btn-copy {
@@ -696,15 +748,29 @@
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: all 0.3s;
     white-space: nowrap;
     display: flex;
     align-items: center;
     gap: 6px;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .btn-copy:hover {
     background: #1976D2;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.btn-copy:active {
+    transform: translateY(0);
+}
+
+.btn-copy:disabled {
+    background: #888;
+    cursor: not-allowed;
+    transform: none;
 }
 
 .submission-toggle {

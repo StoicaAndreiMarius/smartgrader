@@ -37,7 +37,14 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
             return;
         }
 
-        window.location.href = "/";
+        // Redirect based on user role
+        if (data.role === 'teacher') {
+            window.location.href = "/tests/";
+        } else if (data.role === 'student') {
+            window.location.href = "/student/dashboard/";
+        } else {
+            window.location.href = "/";
+        }
     } catch (error) {
         errorEl.textContent = "Server error!";
         submitBtn.disabled = false;
