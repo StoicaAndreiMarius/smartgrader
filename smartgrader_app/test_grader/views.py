@@ -560,12 +560,26 @@ def student_test_access(request, share_code):
             'message': 'Only students can access tests via share codes.'
         }, status=403)
 
+    # Normalize share code: strip whitespace, remove dashes, convert to uppercase
+    normalized_code = share_code.strip().replace('-', '').upper()
+
+    # Debug logging
+    print(f"[DEBUG] Student test access - User: {request.user.email}")
+    print(f"[DEBUG] Original share code from URL: '{share_code}'")
+    print(f"[DEBUG] Normalized share code: '{normalized_code}'")
+
     # Find test by share code
     try:
-        test = Test.objects.get(share_code=share_code)
+        test = Test.objects.get(share_code=normalized_code)
+        print(f"[DEBUG] Test found: ID={test.id}, Title='{test.title}'")
     except Test.DoesNotExist:
+        # Show all existing share codes for debugging
+        all_codes = list(Test.objects.filter(share_code__isnull=False).values_list('share_code', flat=True))
+        print(f"[DEBUG] Test NOT found with code: '{normalized_code}'")
+        print(f"[DEBUG] Available share codes in database: {all_codes}")
+
         return render(request, 'test_grader/test_not_found.html', {
-            'message': 'Invalid share code. Please check and try again.'
+            'message': f'Invalid share code "{share_code}". Please check with your teacher and try again.'
         }, status=404)
 
     # Check if submissions are open
@@ -582,9 +596,9 @@ def student_test_access(request, share_code):
     ).first()
 
     if existing_submission and not test.allow_multiple_submissions:
-        # Redirect to results page
+        # Redirect to results page (use test's actual share code)
         return redirect('student-submission-result',
-                       share_code=share_code,
+                       share_code=test.share_code,
                        submission_id=existing_submission.id)
 
     # Build questions without correct answers
@@ -599,7 +613,7 @@ def student_test_access(request, share_code):
     context = {
         'test': test,
         'questions': questions_for_display,
-        'share_code': share_code,
+        'share_code': test.share_code,  # Use normalized code from database
         'has_previous_submission': existing_submission is not None,
         'previous_score': existing_submission.percentage if existing_submission else None
     }
@@ -619,9 +633,12 @@ def student_submit_answers(request, share_code):
     if not profile or profile.role != 'student':
         return JsonResponse({'error': 'Only students can submit answers'}, status=403)
 
+    # Normalize share code
+    normalized_code = share_code.strip().replace('-', '').upper()
+
     # Find test
     try:
-        test = Test.objects.get(share_code=share_code)
+        test = Test.objects.get(share_code=normalized_code)
     except Test.DoesNotExist:
         return JsonResponse({'error': 'Invalid share code'}, status=404)
 
@@ -712,9 +729,12 @@ def student_submission_result(request, share_code, submission_id):
             'message': 'Access denied.'
         }, status=403)
 
+    # Normalize share code
+    normalized_code = share_code.strip().replace('-', '').upper()
+
     # Find test and submission
     try:
-        test = Test.objects.get(share_code=share_code)
+        test = Test.objects.get(share_code=normalized_code)
         submission = Submission.objects.get(
             id=submission_id,
             test=test,
@@ -760,7 +780,7 @@ def student_submission_result(request, share_code, submission_id):
         'test': test,
         'submission': submission,
         'answer_details': answer_details,
-        'share_code': share_code
+        'share_code': test.share_code  # Use normalized code from database
     }
 
     return render(request, 'test_grader/student_result.html', context)
