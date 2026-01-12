@@ -75,6 +75,20 @@ def detect_answers(img, num_questions=20, num_options=5, darkness_threshold=0.6)
     if height != target_height or width != target_width:
         img = cv2.resize(img, (target_width, target_height))
 
+    # Adaptive threshold: fewer questions = taller cells = more empty space = need lower threshold
+    # For 1-10 questions: use 0.20 (matches the old working code with 20% threshold)
+    # For 11-19 questions: gradually increase from 0.20 to 0.6
+    # For 20+ questions: use 0.6 (original)
+    if num_questions <= 10:
+        adaptive_threshold = 0.20
+    elif num_questions < 20:
+        adaptive_threshold = 0.20 + (num_questions - 10) * (0.6 - 0.20) / (20 - 10)
+    else:
+        adaptive_threshold = 0.6
+
+    # Use the lower of provided threshold or adaptive threshold
+    darkness_threshold = min(darkness_threshold, adaptive_threshold)
+
     rows = np.vsplit(img, num_questions)
     detected_answers = []
 
@@ -139,9 +153,6 @@ def process_omr_image(image_path, num_questions=20, num_options=5, darkness_thre
         contours, _ = cv2.findContours(img_canny, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
 
         answer_sheet = find_answer_sheet(contours, img_gray)
-
-        if answer_sheet is None:
-            return {'success': False, 'error': 'Could not find answer sheet rectangle in image'}
 
         _, img_threshold = cv2.threshold(answer_sheet, 150, 255, cv2.THRESH_BINARY_INV)
 
