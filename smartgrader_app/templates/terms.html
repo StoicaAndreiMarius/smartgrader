@@ -1,0 +1,345 @@
+{% extends 'base.html' %}
+
+{% block title %}Terms of Service - SmartGrader{% endblock %}
+
+{% block content %}
+<style>
+    .terms-container {
+        max-width: 1000px;
+        margin: 50px auto;
+        padding: 30px;
+    }
+
+    .terms-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .terms-header h1 {
+        color: #fff;
+        font-size: 2.5em;
+        margin-bottom: 10px;
+    }
+
+    .terms-header p {
+        color: #aaa;
+        font-size: 1.1em;
+    }
+
+    .terms-section {
+        background: #2a2a2a;
+        padding: 30px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .terms-section h2 {
+        color: #4CAF50;
+        font-size: 1.8em;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #444;
+        padding-bottom: 10px;
+    }
+
+    .terms-section h3 {
+        color: #fff;
+        font-size: 1.3em;
+        margin-top: 20px;
+        margin-bottom: 15px;
+    }
+
+    .terms-section p, .terms-section li {
+        color: #ccc;
+        line-height: 1.8;
+        margin-bottom: 12px;
+    }
+
+    .terms-section ul, .terms-section ol {
+        margin-left: 20px;
+    }
+
+    .last-updated {
+        color: #888;
+        font-style: italic;
+        text-align: center;
+        margin-top: 30px;
+    }
+
+    .important-notice {
+        background: #3a2a2a;
+        border-left: 4px solid #ff9800;
+        padding: 15px;
+        margin: 20px 0;
+    }
+
+    .important-notice p {
+        color: #ffcc80;
+        margin: 0;
+    }
+</style>
+
+<div class="terms-container">
+    <div class="terms-header">
+        <h1>Terms of Service</h1>
+        <p>Agreement between you and SmartGrader</p>
+    </div>
+
+    <div class="terms-section">
+        <h2>Acceptance of Terms</h2>
+        <p>
+            By accessing and using SmartGrader, you accept and agree to be bound by the terms and provisions
+            of this agreement. If you do not agree to these terms, please do not use this platform.
+        </p>
+        <p>
+            These Terms of Service apply to all users of the platform, including teachers, students, and
+            administrators.
+        </p>
+    </div>
+
+    <div class="terms-section">
+        <h2>Description of Service</h2>
+        <p>
+            SmartGrader is an educational platform that provides:
+        </p>
+        <ul>
+            <li>Test creation and management tools for teachers</li>
+            <li>AI-powered question generation</li>
+            <li>Automatic optical mark recognition (OMR) for answer sheet grading</li>
+            <li>Student test submission and results viewing</li>
+            <li>Analytics and reporting features</li>
+        </ul>
+        <p>
+            The service is provided "as is" and we reserve the right to modify, suspend, or discontinue
+            any aspect of the service at any time.
+        </p>
+    </div>
+
+    <div class="terms-section">
+        <h2>User Accounts and Registration</h2>
+
+        <h3>Account Creation</h3>
+        <ul>
+            <li>You must provide accurate and complete information when creating an account</li>
+            <li>You are responsible for maintaining the confidentiality of your password</li>
+            <li>You are responsible for all activities that occur under your account</li>
+            <li>You must notify us immediately of any unauthorized use of your account</li>
+        </ul>
+
+        <h3>Account Types</h3>
+        <ul>
+            <li><strong>Teacher Accounts:</strong> Can create tests, upload submissions, and view student results</li>
+            <li><strong>Student Accounts:</strong> Can access tests via share codes, submit answers, and view their own results</li>
+        </ul>
+    </div>
+
+    <div class="terms-section">
+        <h2>User Responsibilities and Conduct</h2>
+
+        <h3>Acceptable Use</h3>
+        <p>You agree NOT to:</p>
+        <ul>
+            <li>Use the service for any illegal or unauthorized purpose</li>
+            <li>Attempt to gain unauthorized access to any part of the platform</li>
+            <li>Upload malicious code, viruses, or harmful content</li>
+            <li>Interfere with or disrupt the service or servers</li>
+            <li>Collect or harvest personal information from other users</li>
+            <li>Share your account credentials with others</li>
+            <li>Abuse the share code system to access tests you're not authorized to take</li>
+            <li>Submit false or misleading information</li>
+            <li>Reverse engineer or attempt to extract source code</li>
+        </ul>
+
+        <h3>Academic Integrity</h3>
+        <p>For students:</p>
+        <ul>
+            <li>Submit only your own work</li>
+            <li>Do not share test content or answers with others</li>
+            <li>Do not attempt to cheat or manipulate the grading system</li>
+            <li>Follow your institution's academic honesty policies</li>
+        </ul>
+
+        <p>For teachers:</p>
+        <ul>
+            <li>Create original test content or properly attribute sources</li>
+            <li>Protect share codes and only distribute to authorized students</li>
+            <li>Respect student privacy and confidentiality</li>
+            <li>Use grading features fairly and consistently</li>
+        </ul>
+    </div>
+
+    <div class="terms-section">
+        <h2>Intellectual Property</h2>
+
+        <h3>Platform Ownership</h3>
+        <p>
+            SmartGrader and its original content, features, and functionality are owned by the platform
+            operators and are protected by international copyright, trademark, and other intellectual
+            property laws.
+        </p>
+
+        <h3>User Content</h3>
+        <ul>
+            <li><strong>Teacher-Created Content:</strong> Teachers retain ownership of tests they create but grant SmartGrader
+                a license to store, process, and display this content as necessary to operate the service</li>
+            <li><strong>Student Submissions:</strong> Students retain ownership of their submitted answer sheets, but grant
+                SmartGrader a license to process and grade them</li>
+        </ul>
+
+        <h3>AI-Generated Content</h3>
+        <p>
+            Questions generated using Claude AI are provided as-is. Teachers are responsible for reviewing
+            and verifying the accuracy and appropriateness of AI-generated content before using it in tests.
+        </p>
+    </div>
+
+    <div class="terms-section">
+        <h2>Privacy and Data Protection</h2>
+        <p>
+            Your use of SmartGrader is also governed by our <a href="{% url 'privacy' %}" style="color: #4CAF50;">Privacy Policy</a>.
+            By using the service, you consent to the collection and use of information as described in the Privacy Policy.
+        </p>
+    </div>
+
+    <div class="terms-section">
+        <h2>Grading and Results</h2>
+
+        <div class="important-notice">
+            <p><strong>Important:</strong> While SmartGrader uses advanced OMR technology, grading accuracy depends on
+            image quality and proper answer sheet completion. Always verify results for critical assessments.</p>
+        </div>
+
+        <h3>Grading Process</h3>
+        <ul>
+            <li>SmartGrader automatically grades submissions using optical mark recognition</li>
+            <li>Results are provided instantly but should be reviewed by teachers</li>
+            <li>Teachers are responsible for final grade determinations</li>
+            <li>We do not guarantee 100% accuracy in automated grading</li>
+        </ul>
+
+        <h3>Disputes</h3>
+        <p>
+            If you believe a grading error has occurred, contact your teacher or system administrator.
+            SmartGrader provides tools to review submissions but does not mediate grade disputes.
+        </p>
+    </div>
+
+    <div class="terms-section">
+        <h2>Limitation of Liability</h2>
+        <p>
+            To the fullest extent permitted by applicable law, SmartGrader shall not be liable for:
+        </p>
+        <ul>
+            <li>Any indirect, incidental, special, consequential, or punitive damages</li>
+            <li>Loss of data, profits, or opportunity</li>
+            <li>Errors or inaccuracies in automated grading</li>
+            <li>Service interruptions or downtime</li>
+            <li>Unauthorized access to your account due to your failure to secure credentials</li>
+            <li>Content created by AI that is inaccurate or inappropriate</li>
+        </ul>
+        <p>
+            The service is provided "as is" without warranties of any kind, either express or implied.
+        </p>
+    </div>
+
+    <div class="terms-section">
+        <h2>Indemnification</h2>
+        <p>
+            You agree to indemnify and hold harmless SmartGrader and its operators from any claims, losses,
+            damages, liabilities, and expenses (including legal fees) arising from:
+        </p>
+        <ul>
+            <li>Your use of the service</li>
+            <li>Your violation of these Terms of Service</li>
+            <li>Your violation of any rights of another party</li>
+            <li>Content you submit to the platform</li>
+        </ul>
+    </div>
+
+    <div class="terms-section">
+        <h2>Data Backup and Loss</h2>
+        <p>
+            While we take reasonable measures to protect data:
+        </p>
+        <ul>
+            <li>You are responsible for maintaining backup copies of important test content</li>
+            <li>We are not liable for data loss due to system failures, errors, or security breaches</li>
+            <li>We recommend regularly exporting test data and results</li>
+        </ul>
+    </div>
+
+    <div class="terms-section">
+        <h2>Termination</h2>
+
+        <h3>By You</h3>
+        <p>You may stop using the service at any time by contacting your system administrator to request account deletion.</p>
+
+        <h3>By Us</h3>
+        <p>We reserve the right to suspend or terminate your account if:</p>
+        <ul>
+            <li>You violate these Terms of Service</li>
+            <li>Your use of the service poses a security risk</li>
+            <li>You engage in fraudulent or illegal activities</li>
+            <li>Your account is inactive for an extended period</li>
+        </ul>
+
+        <h3>Effect of Termination</h3>
+        <p>
+            Upon termination, your right to use the service will immediately cease. We may delete your
+            account data in accordance with our data retention policies.
+        </p>
+    </div>
+
+    <div class="terms-section">
+        <h2>Modifications to Terms</h2>
+        <p>
+            We reserve the right to modify these Terms of Service at any time. We will notify users of
+            any material changes by posting the updated terms on this page with a new "Last Updated" date.
+        </p>
+        <p>
+            Your continued use of SmartGrader after changes are posted constitutes your acceptance of
+            the modified terms.
+        </p>
+    </div>
+
+    <div class="terms-section">
+        <h2>Governing Law</h2>
+        <p>
+            These Terms of Service shall be governed by and construed in accordance with applicable laws,
+            without regard to conflict of law provisions.
+        </p>
+    </div>
+
+    <div class="terms-section">
+        <h2>Educational Use</h2>
+        <p>
+            SmartGrader is designed for educational purposes. Users must comply with their institution's
+            policies regarding:
+        </p>
+        <ul>
+            <li>Student data privacy (e.g., FERPA in the United States)</li>
+            <li>Accessibility requirements</li>
+            <li>Assessment and grading standards</li>
+            <li>Technology acceptable use policies</li>
+        </ul>
+    </div>
+
+    <div class="terms-section">
+        <h2>Third-Party Services</h2>
+        <p>
+            SmartGrader integrates with third-party services (such as Claude AI). Your use of these
+            integrated services may be subject to additional terms and conditions set by those providers.
+        </p>
+    </div>
+
+    <div class="terms-section">
+        <h2>Contact Information</h2>
+        <p>
+            If you have questions about these Terms of Service, please contact your system administrator
+            or refer to the <a href="{% url 'help' %}" style="color: #4CAF50;">Help</a> page for more information.
+        </p>
+    </div>
+
+    <p class="last-updated">Last Updated: January 12, 2026</p>
+</div>
+{% endblock %}

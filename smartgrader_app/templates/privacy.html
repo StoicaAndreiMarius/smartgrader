@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+
+{% block title %}Privacy Policy - SmartGrader{% endblock %}
+
+{% block content %}
+<style>
+    .policy-container {
+        max-width: 1000px;
+        margin: 50px auto;
+        padding: 30px;
+    }
+
+    .policy-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .policy-header h1 {
+        color: #fff;
+        font-size: 2.5em;
+        margin-bottom: 10px;
+    }
+
+    .policy-header p {
+        color: #aaa;
+        font-size: 1.1em;
+    }
+
+    .policy-section {
+        background: #2a2a2a;
+        padding: 30px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .policy-section h2 {
+        color: #4CAF50;
+        font-size: 1.8em;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #444;
+        padding-bottom: 10px;
+    }
+
+    .policy-section h3 {
+        color: #fff;
+        font-size: 1.3em;
+        margin-top: 20px;
+        margin-bottom: 15px;
+    }
+
+    .policy-section p, .policy-section li {
+        color: #ccc;
+        line-height: 1.8;
+        margin-bottom: 12px;
+    }
+
+    .policy-section ul {
+        margin-left: 20px;
+    }
+
+    .last-updated {
+        color: #888;
+        font-style: italic;
+        text-align: center;
+        margin-top: 30px;
+    }
+</style>
+
+<div class="policy-container">
+    <div class="policy-header">
+        <h1>Privacy Policy</h1>
+        <p>How SmartGrader collects, uses, and protects your information</p>
+    </div>
+
+    <div class="policy-section">
+        <h2>Introduction</h2>
+        <p>
+            At SmartGrader, we take your privacy seriously. This Privacy Policy explains how we collect, use,
+            disclose, and safeguard your information when you use our platform. Please read this privacy policy
+            carefully. If you do not agree with the terms of this privacy policy, please do not access the application.
+        </p>
+    </div>
+
+    <div class="policy-section">
+        <h2>Information We Collect</h2>
+
+        <h3>Personal Information</h3>
+        <p>We collect personal information that you voluntarily provide to us when you:</p>
+        <ul>
+            <li>Register for an account (name, email address, password)</li>
+            <li>Create or take tests</li>
+            <li>Submit answer sheets</li>
+            <li>Contact us for support</li>
+        </ul>
+
+        <h3>Academic Information</h3>
+        <p>When using SmartGrader, we collect:</p>
+        <ul>
+            <li>Test questions and answers created by teachers</li>
+            <li>Student answer sheet submissions (images)</li>
+            <li>Test scores and performance data</li>
+            <li>Test access history via share codes</li>
+        </ul>
+
+        <h3>Technical Information</h3>
+        <p>We automatically collect certain information when you visit, use, or navigate the platform:</p>
+        <ul>
+            <li>Log data (IP address, browser type, operating system)</li>
+            <li>Usage data (pages visited, features used, time spent)</li>
+            <li>Session data (authentication tokens, preferences)</li>
+        </ul>
+    </div>
+
+    <div class="policy-section">
+        <h2>How We Use Your Information</h2>
+        <p>We use the information we collect to:</p>
+        <ul>
+            <li>Provide, operate, and maintain the SmartGrader platform</li>
+            <li>Process and grade test submissions automatically</li>
+            <li>Enable teachers to create and manage tests</li>
+            <li>Allow students to access and submit tests</li>
+            <li>Display test results and performance analytics</li>
+            <li>Improve and optimize our services</li>
+            <li>Communicate with you about your account or support requests</li>
+            <li>Ensure security and prevent fraud</li>
+        </ul>
+    </div>
+
+    <div class="policy-section">
+        <h2>Data Sharing and Disclosure</h2>
+        <p>We do not sell your personal information. We may share your information only in the following circumstances:</p>
+
+        <h3>Within the Platform</h3>
+        <ul>
+            <li><strong>Teachers:</strong> Can view their own created tests and submissions from their students</li>
+            <li><strong>Students:</strong> Can view only their own submissions and results</li>
+        </ul>
+
+        <h3>Service Providers</h3>
+        <p>
+            We may share data with third-party service providers who perform services on our behalf,
+            such as hosting, data analysis, or AI processing (e.g., Claude AI for question generation).
+        </p>
+
+        <h3>Legal Requirements</h3>
+        <p>
+            We may disclose your information if required to do so by law or in response to valid requests
+            by public authorities (e.g., a court or government agency).
+        </p>
+    </div>
+
+    <div class="policy-section">
+        <h2>Data Security</h2>
+        <p>
+            We implement appropriate technical and organizational security measures to protect your personal information:
+        </p>
+        <ul>
+            <li>Encrypted passwords using industry-standard hashing</li>
+            <li>Secure session management</li>
+            <li>Regular security updates and monitoring</li>
+            <li>Access controls to limit data access to authorized personnel only</li>
+        </ul>
+        <p>
+            However, no method of transmission over the Internet or electronic storage is 100% secure.
+            While we strive to use commercially acceptable means to protect your personal information,
+            we cannot guarantee its absolute security.
+        </p>
+    </div>
+
+    <div class="policy-section">
+        <h2>Data Retention</h2>
+        <p>
+            We retain your personal information for as long as necessary to fulfill the purposes outlined
+            in this privacy policy, unless a longer retention period is required or permitted by law.
+        </p>
+        <ul>
+            <li>Account information: Retained until account deletion</li>
+            <li>Test data and submissions: Retained as long as the test exists</li>
+            <li>Session data: Automatically expires based on activity</li>
+        </ul>
+    </div>
+
+    <div class="policy-section">
+        <h2>Your Privacy Rights</h2>
+        <p>Depending on your location, you may have the following rights:</p>
+        <ul>
+            <li><strong>Access:</strong> Request access to your personal information</li>
+            <li><strong>Correction:</strong> Request correction of inaccurate or incomplete data</li>
+            <li><strong>Deletion:</strong> Request deletion of your personal information</li>
+            <li><strong>Data Portability:</strong> Request a copy of your data in a structured format</li>
+            <li><strong>Objection:</strong> Object to processing of your personal information</li>
+        </ul>
+        <p>To exercise these rights, please contact your system administrator.</p>
+    </div>
+
+    <div class="policy-section">
+        <h2>Children's Privacy</h2>
+        <p>
+            SmartGrader is intended for use in educational settings. If you are a parent or guardian and
+            believe your child has provided us with personal information without your consent, please
+            contact your school or the system administrator.
+        </p>
+    </div>
+
+    <div class="policy-section">
+        <h2>Third-Party Services</h2>
+        <p>SmartGrader may use the following third-party services:</p>
+        <ul>
+            <li><strong>Claude AI (Anthropic):</strong> For AI-powered question generation</li>
+            <li><strong>Computer Vision Libraries:</strong> For optical mark recognition (OMR)</li>
+        </ul>
+        <p>
+            These services have their own privacy policies. We encourage you to review their policies
+            to understand how they handle your data.
+        </p>
+    </div>
+
+    <div class="policy-section">
+        <h2>Changes to This Privacy Policy</h2>
+        <p>
+            We may update this privacy policy from time to time. We will notify you of any changes by
+            posting the new privacy policy on this page and updating the "Last Updated" date below.
+        </p>
+        <p>
+            You are advised to review this privacy policy periodically for any changes. Changes to this
+            privacy policy are effective when they are posted on this page.
+        </p>
+    </div>
+
+    <div class="policy-section">
+        <h2>Contact Us</h2>
+        <p>If you have questions or concerns about this privacy policy, please contact your system administrator.</p>
+    </div>
+
+    <p class="last-updated">Last Updated: January 12, 2026</p>
+</div>
+{% endblock %}
