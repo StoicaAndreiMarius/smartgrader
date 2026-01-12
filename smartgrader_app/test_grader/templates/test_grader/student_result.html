@@ -277,6 +277,32 @@
         color: white;
     }
 
+    .pdf-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-size: 1.05em;
+        font-weight: 600;
+        margin-top: 20px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+    }
+
+    .pdf-button:hover {
+        background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(33, 150, 243, 0.4);
+    }
+
+    .pdf-button i {
+        font-size: 1.2em;
+    }
+
     .btn-primary:hover {
         background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%);
         transform: translateY(-2px);
@@ -401,6 +427,14 @@
         <h1>Test Results</h1>
         <p class="test-title">{{ test.title }}</p>
         <p class="submitted-date">Submitted: {{ submission.submitted_at|date:"M d, Y g:i A" }}</p>
+        {% if pdf_url %}
+            <div style="margin-top: 20px;">
+                <a href="{{ pdf_url }}" target="_blank" class="pdf-button">
+                    <i class='bx bxs-file-pdf'></i>
+                    View Test PDF
+                </a>
+            </div>
+        {% endif %}
     </div>
 
     <div class="score-summary">
@@ -439,26 +473,22 @@
                 <div class="answer-box">
                     <div class="answer-box-label">Your Answer</div>
                     <div class="answer-box-value student-answer {% if not detail.is_correct %}wrong{% endif %}">
-                        {% if detail.student_answer is None %}
+                        {% if detail.student_answer_letter is None %}
                             <em>Not answered</em>
-                        {% elif detail.student_answer is sequence and detail.student_answer is not string %}
-                            {% for ans in detail.student_answer %}
-                                {{ "ABCDEFGHIJ"|slice:ans|last }}{% if not forloop.last %}, {% endif %}
-                            {% endfor %}
+                        {% elif detail.student_answer_letter is sequence and detail.student_answer_letter is not string %}
+                            {% for ans in detail.student_answer_letter %}{{ ans }}{% if not forloop.last %}, {% endif %}{% endfor %}
                         {% else %}
-                            {{ "ABCDEFGHIJ"|slice:detail.student_answer|last }}
+                            {{ detail.student_answer_letter }}
                         {% endif %}
                     </div>
                 </div>
                 <div class="answer-box">
                     <div class="answer-box-label">Correct Answer</div>
                     <div class="answer-box-value correct-answer">
-                        {% if detail.correct_answer is sequence and detail.correct_answer is not string %}
-                            {% for ans in detail.correct_answer %}
-                                {{ "ABCDEFGHIJ"|slice:ans|last }}{% if not forloop.last %}, {% endif %}
-                            {% endfor %}
+                        {% if detail.correct_answer_letter is sequence and detail.correct_answer_letter is not string %}
+                            {% for ans in detail.correct_answer_letter %}{{ ans }}{% if not forloop.last %}, {% endif %}{% endfor %}
                         {% else %}
-                            {{ "ABCDEFGHIJ"|slice:detail.correct_answer|last }}
+                            {{ detail.correct_answer_letter }}
                         {% endif %}
                     </div>
                 </div>
@@ -475,8 +505,36 @@
     <div class="action-buttons">
         {% if test.allow_multiple_submissions %}
             <a href="{% url 'student-test-access' share_code %}" class="btn btn-primary">Submit Again</a>
+            <button onclick="deleteSubmission()" class="btn btn-danger">Delete & Reupload</button>
         {% endif %}
         <button onclick="window.print()" class="btn btn-secondary">Print Results</button>
     </div>
 </div>
+
+<script>
+function deleteSubmission() {
+    if (!confirm('Are you sure you want to delete this submission? This action cannot be undone.')) {
+        return;
+    }
+
+    fetch('{% url "student-delete-submission" share_code submission.id %}', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = data.redirect_url;
+        } else {
+            alert('Error: ' + (data.error || 'Failed to delete submission'));
+        }
+    })
+    .catch(error => {
+        alert('Error deleting submission. Please try again.');
+        console.error('Error:', error);
+    });
+}
+</script>
 {% endblock %}
