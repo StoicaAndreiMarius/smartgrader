@@ -288,6 +288,32 @@
         color: #4CAF50;
     }
 
+    .pdf-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-size: 1.05em;
+        font-weight: 600;
+        margin-top: 20px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+    }
+
+    .pdf-button:hover {
+        background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(33, 150, 243, 0.4);
+    }
+
+    .pdf-button i {
+        font-size: 1.2em;
+    }
+
     /* Mobile Responsive Styles */
     @media (max-width: 768px) {
         .student-test-container {
@@ -359,6 +385,14 @@
             {% endif %}
             <p><strong>Number of Questions:</strong> {{ test.num_questions }}</p>
             <p><strong>Number of Options:</strong> {{ test.num_options }} (A-{{ "ABCDE"|slice:":test.num_options"|last }})</p>
+            {% if pdf_url %}
+                <div style="margin-top: 20px;">
+                    <a href="{{ pdf_url }}" target="_blank" class="pdf-button">
+                        <i class='bx bxs-file-pdf'></i>
+                        View Test PDF
+                    </a>
+                </div>
+            {% endif %}
         </div>
     </div>
 
@@ -378,11 +412,11 @@
         <div class="upload-instructions">
             <p><strong>Instructions:</strong></p>
             <ol>
-                <li>Complete the answer sheet by filling in the bubbles for your answers</li>
-                <li>Scan or take a clear photo of your answer sheet</li>
-                <li>Upload the image below</li>
-                <li>Wait for automatic grading to complete</li>
-                <li>View your results immediately</li>
+                <li>Download and print the test PDF with questions and answer bubbles</li>
+                <li>Fill in the bubbles completely and darkly for your answers</li>
+                <li>Scan or take a clear, well-lit photo of the filled answer sheet</li>
+                <li>Make sure the entire sheet including the QR code is visible</li>
+                <li>Upload the image below and wait for automatic grading</li>
             </ol>
         </div>
 

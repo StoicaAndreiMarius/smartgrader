@@ -541,8 +541,16 @@ def student_dashboard(request):
         student_user=request.user
     ).select_related('test').order_by('-submitted_at')[:5]
 
+    # Get accessed tests from session (tests viewed but maybe not submitted yet)
+    accessed_tests = request.session.get('accessed_tests', [])
+
+    # Filter out tests that have already been submitted
+    submitted_test_ids = set(sub.test.id for sub in recent_submissions)
+    available_tests = [t for t in accessed_tests if t.get('id') not in submitted_test_ids]
+
     context = {
-        'recent_submissions': recent_submissions
+        'recent_submissions': recent_submissions,
+        'available_tests': available_tests
     }
 
     return render(request, 'test_grader/student_dashboard.html', context)
@@ -563,20 +571,10 @@ def student_test_access(request, share_code):
     # Normalize share code: strip whitespace, remove dashes, convert to uppercase
     normalized_code = share_code.strip().replace('-', '').upper()
 
-    # Debug logging
-    print(f"[DEBUG] Student test access - User: {request.user.email}")
-    print(f"[DEBUG] Original share code from URL: '{share_code}'")
-    print(f"[DEBUG] Normalized share code: '{normalized_code}'")
-
     # Find test by share code
     try:
         test = Test.objects.get(share_code=normalized_code)
-        print(f"[DEBUG] Test found: ID={test.id}, Title='{test.title}'")
     except Test.DoesNotExist:
-        # Show all existing share codes for debugging
-        all_codes = list(Test.objects.filter(share_code__isnull=False).values_list('share_code', flat=True))
-        print(f"[DEBUG] Test NOT found with code: '{normalized_code}'")
-        print(f"[DEBUG] Available share codes in database: {all_codes}")
 
         return render(request, 'test_grader/test_not_found.html', {
             'message': f'Invalid share code "{share_code}". Please check with your teacher and try again.'
@@ -610,12 +608,48 @@ def student_test_access(request, share_code):
             'num_options': test.num_options
         })
 
+    # Track accessed test in session for dashboard
+    if 'accessed_tests' not in request.session:
+        request.session['accessed_tests'] = []
+
+    # Add this test to accessed tests (avoid duplicates)
+    test_info = {
+        'id': test.id,
+        'title': test.title,
+        'share_code': test.share_code,
+        'num_questions': len(test.questions)
+    }
+
+    # Remove if already exists and add to front
+    request.session['accessed_tests'] = [
+        t for t in request.session['accessed_tests']
+        if t.get('id') != test.id
+    ]
+    request.session['accessed_tests'].insert(0, test_info)
+
+    # Keep only last 5 accessed tests
+    request.session['accessed_tests'] = request.session['accessed_tests'][:5]
+    request.session.modified = True
+
+    # Check if PDF exists for this test
+    pdf_path = Path(settings.BASE_DIR) / "static" / "generated" / f"test_{test.id}.pdf"
+    pdf_url = None
+    # Use os.path.exists since Path.exists() might have issues with special characters
+    if os.path.exists(str(pdf_path)):
+        static_url = settings.STATIC_URL or "/static/"
+        if not static_url.startswith(("http://", "https://", "/")):
+            static_url = f"/{static_url}"
+        if not static_url.endswith("/"):
+            static_url = f"{static_url}/"
+        pdf_url = f"{static_url}generated/test_{test.id}.pdf"
+
     context = {
         'test': test,
         'questions': questions_for_display,
         'share_code': test.share_code,  # Use normalized code from database
         'has_previous_submission': existing_submission is not None,
-        'previous_score': existing_submission.percentage if existing_submission else None
+        'previous_score': existing_submission.percentage if existing_submission else None,
+        'pdf_url': pdf_url
     }
 
     return render(request, 'test_grader/student_test_access.html', context)
@@ -766,24 +800,80 @@ def student_submission_result(request, share_code, submission_id):
 
         is_correct = student_set == correct_set
 
+        # Convert answers to letter format (A, B, C, etc.)
+        def to_letter(ans):
+            if ans is None:
+                return None
+            if isinstance(ans, list):
+                return [chr(65 + a) for a in ans]
+            return chr(65 + ans)
+
         answer_details.append({
             'question_num': i + 1,
             'question_text': question['question'],
             'options': question['options'],
             'student_answer': student_answer,
             'correct_answer': correct_answer,
+            'student_answer_letter': to_letter(student_answer),
+            'correct_answer_letter': to_letter(correct_answer),
             'is_correct': is_correct,
-            'grading_mode': question.get('grading_mode', 'all_or_nothing')
-        })
+            })
+
+    # Check if PDF exists for this test
+    pdf_path = Path(settings.BASE_DIR) / "static" / "generated" / f"test_{test.id}.pdf"
+    pdf_url = None
+    # Use os.path.exists since Path.exists() might have issues with special characters
+    if os.path.exists(str(pdf_path)):
+        static_url = settings.STATIC_URL or "/static/"
+        if not static_url.startswith(("http://", "https://", "/")):
+            static_url = f"/{static_url}"
+        if not static_url.endswith("/"):
+            static_url = f"{static_url}/"
+        pdf_url = f"{static_url}generated/test_{test.id}.pdf"
 
     context = {
         'test': test,
         'submission': submission,
         'answer_details': answer_details,
-        'share_code': test.share_code  # Use normalized code from database
+        'share_code': test.share_code,  # Use normalized code from database
+        'pdf_url': pdf_url
     }
 
     return render(request, 'test_grader/student_result.html', context)
+
+
+@login_required
+def student_delete_submission(request, share_code, submission_id):
+    """Allow student to delete their own submission."""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Only POST allowed'}, status=405)
+
+    # Verify student role
+    profile = getattr(request.user, 'profile', None)
+    if not profile or profile.role != 'student':
+        return JsonResponse({'error': 'Access denied'}, status=403)
+
+    # Normalize share code
+    normalized_code = share_code.strip().replace('-', '').upper()
+
+    try:
+        test = Test.objects.get(share_code=normalized_code)
+        submission = Submission.objects.get(
+            id=submission_id,
+            test=test,
+            student_user=request.user  # Ensure student can only delete their own
+        )
+
+        # Delete the submission
+        submission.delete()
+
+        return JsonResponse({
+            'success': True,
+            'redirect_url': f'/student/test/{share_code}/'
+        })
+
+    except (Test.DoesNotExist, Submission.DoesNotExist):
+        return JsonResponse({'error': 'Submission not found'}, status=404)
 
 
 # =============================================================================
@@ -798,3 +888,23 @@ def help_page(request):
 def information_page(request):
     """Display the information/about page."""
     return render(request, 'information.html')
+
+
+def privacy_page(request):
+    """Display the privacy policy page."""
+    return render(request, 'privacy.html')
+
+
+def terms_page(request):
+    """Display the terms of service page."""
+    return render(request, 'terms.html')
+
+
+def about_page(request):
+    """Display the about us page."""
+    return render(request, 'about.html')
+
+
+def support_page(request):
+    """Display the support page."""
+    return render(request, 'support.html')
