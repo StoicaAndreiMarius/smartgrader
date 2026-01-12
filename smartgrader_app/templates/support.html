@@ -1,0 +1,281 @@
+{% extends 'base.html' %}
+
+{% block title %}Support - SmartGrader{% endblock %}
+
+{% block content %}
+<style>
+    .policy-container {
+        max-width: 1000px;
+        margin: 50px auto;
+        padding: 30px;
+    }
+
+    .policy-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .policy-header h1 {
+        color: #fff;
+        font-size: 2.5em;
+        margin-bottom: 10px;
+    }
+
+    .policy-header p {
+        color: #aaa;
+        font-size: 1.1em;
+    }
+
+    .policy-section {
+        background: #2a2a2a;
+        padding: 30px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .policy-section h2 {
+        color: #4CAF50;
+        font-size: 1.8em;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #444;
+        padding-bottom: 10px;
+    }
+
+    .policy-section h3 {
+        color: #fff;
+        font-size: 1.3em;
+        margin-top: 20px;
+        margin-bottom: 15px;
+    }
+
+    .policy-section p, .policy-section li {
+        color: #ccc;
+        line-height: 1.8;
+        margin-bottom: 12px;
+    }
+
+    .policy-section ul {
+        margin-left: 20px;
+    }
+
+    .policy-section ol {
+        margin-left: 20px;
+    }
+
+    .faq-item {
+        background: #1f1f1f;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        border-left: 4px solid #4CAF50;
+    }
+
+    .faq-item h4 {
+        color: #4CAF50;
+        margin-bottom: 10px;
+        font-size: 1.2em;
+    }
+
+    .faq-item p {
+        color: #ccc;
+    }
+
+    .troubleshooting-step {
+        background: #1f1f1f;
+        padding: 15px 20px;
+        margin: 10px 0;
+        border-radius: 8px;
+        border-left: 3px solid #2196F3;
+    }
+
+    .troubleshooting-step strong {
+        color: #2196F3;
+    }
+</style>
+
+<div class="policy-container">
+    <div class="policy-header">
+        <h1>Support Center</h1>
+        <p>Get help with SmartGrader features and troubleshooting</p>
+    </div>
+
+    <div class="policy-section">
+        <h2>Getting Started</h2>
+
+        <h3>For Teachers</h3>
+        <ol>
+            <li><strong>Create a test:</strong> Use the test creation interface to add questions manually or generate them with AI</li>
+            <li><strong>Generate PDF:</strong> Download the test PDF with questions and answer bubbles</li>
+            <li><strong>Create share code:</strong> Generate a unique code for student access</li>
+            <li><strong>Open submissions:</strong> Toggle submissions to allow students to upload their answer sheets</li>
+            <li><strong>Review results:</strong> View graded submissions and export data as CSV</li>
+        </ol>
+
+        <h3>For Students</h3>
+        <ol>
+            <li><strong>Get share code:</strong> Obtain the test code from your teacher</li>
+            <li><strong>Access test:</strong> Visit the student dashboard and enter the share code</li>
+            <li><strong>Download PDF:</strong> Download the test PDF with questions</li>
+            <li><strong>Fill answers:</strong> Complete the test by filling in the bubbles completely and darkly</li>
+            <li><strong>Upload scan:</strong> Take a clear photo or scan of your answer sheet and upload it</li>
+            <li><strong>View results:</strong> See your score and detailed feedback immediately</li>
+        </ol>
+    </div>
+
+    <div class="policy-section">
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="faq-item">
+            <h4>Why is my answer sheet not being detected?</h4>
+            <p>
+                Make sure the entire answer sheet is visible in the photo, including the QR code at the top.
+                The image should be clear, well-lit, and taken straight-on (not at an angle). Ensure all
+                four corners of the answer sheet box are visible.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <h4>Why aren't my filled bubbles being recognized?</h4>
+            <p>
+                Fill bubbles completely and darkly with a black pen or dark pencil. Light marks or partially
+                filled bubbles may not be detected. Make sure to fill the entire bubble, not just make a checkmark.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <h4>Can I submit a test multiple times?</h4>
+            <p>
+                This depends on your teacher's settings. If "Allow Multiple Submissions" is enabled, you can
+                delete your previous submission and resubmit. Otherwise, you can only submit once per test.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <h4>How does the grading work for multiple correct answers?</h4>
+            <p>
+                If a question has multiple correct answers, you must fill all correct bubbles to receive full credit
+                in "all-or-nothing" mode. In "partial credit" mode, you receive proportional points based on how many
+                correct answers you selected, with penalties for incorrect selections.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <h4>What file formats are supported for upload?</h4>
+            <p>
+                You can upload PNG, JPG, JPEG, or BMP image files. Maximum file size is 10MB. We recommend
+                using JPG format for the best balance of quality and file size.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <h4>Can I view the PDF after submitting?</h4>
+            <p>
+                Yes! Both on the test access page and the results page, you'll see a "View Test PDF" button
+                if the PDF is available for download.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <h4>What happens if submissions are closed?</h4>
+            <p>
+                If your teacher has closed submissions for a test, you won't be able to upload answer sheets.
+                Contact your teacher if you believe submissions should be open.
+            </p>
+        </div>
+    </div>
+
+    <div class="policy-section">
+        <h2>Troubleshooting</h2>
+
+        <h3>Upload Issues</h3>
+        <div class="troubleshooting-step">
+            <strong>Problem:</strong> "Could not find answer sheet rectangle in image"
+            <p><strong>Solution:</strong> Ensure the entire answer sheet box is visible, including all four corners.
+            Retake the photo with better lighting and positioning.</p>
+        </div>
+
+        <div class="troubleshooting-step">
+            <strong>Problem:</strong> File size too large
+            <p><strong>Solution:</strong> Compress your image or reduce its resolution. Most smartphone cameras
+            produce images that work well at medium quality settings (around 2-4MB).</p>
+        </div>
+
+        <div class="troubleshooting-step">
+            <strong>Problem:</strong> Answers detected incorrectly
+            <p><strong>Solution:</strong> Make sure bubbles are filled completely and darkly. Erase any stray marks
+            outside the bubbles. Ensure the image is sharp and in focus.</p>
+        </div>
+
+        <h3>Access Issues</h3>
+        <div class="troubleshooting-step">
+            <strong>Problem:</strong> Invalid share code
+            <p><strong>Solution:</strong> Double-check the code with your teacher. Share codes are case-sensitive
+            and should be entered without spaces.</p>
+        </div>
+
+        <div class="troubleshooting-step">
+            <strong>Problem:</strong> "Submissions are closed"
+            <p><strong>Solution:</strong> Your teacher has not yet opened submissions or has closed them. Contact
+            your teacher to request access.</p>
+        </div>
+
+        <h3>Account Issues</h3>
+        <div class="troubleshooting-step">
+            <strong>Problem:</strong> Cannot log in
+            <p><strong>Solution:</strong> Verify your email and password are correct. Contact your system
+            administrator if you need to reset your password.</p>
+        </div>
+    </div>
+
+    <div class="policy-section">
+        <h2>Best Practices</h2>
+
+        <h3>For Taking Photos of Answer Sheets</h3>
+        <ul>
+            <li>Use good lighting - natural daylight works best</li>
+            <li>Place the answer sheet on a flat, contrasting surface</li>
+            <li>Hold your camera directly above the sheet (not at an angle)</li>
+            <li>Ensure all four corners of the answer box are visible</li>
+            <li>Make sure the image is in focus and not blurry</li>
+            <li>Avoid shadows falling on the answer sheet</li>
+        </ul>
+
+        <h3>For Filling Answer Sheets</h3>
+        <ul>
+            <li>Use a black pen or dark pencil (HB or darker)</li>
+            <li>Fill bubbles completely - don't use checkmarks or X's</li>
+            <li>Erase mistakes completely if using pencil</li>
+            <li>Don't make stray marks outside the bubbles</li>
+            <li>For multiple answers, fill all correct bubbles completely</li>
+        </ul>
+    </div>
+
+    <div class="policy-section">
+        <h2>Technical Support</h2>
+        <p>
+            If you're experiencing technical issues that aren't covered here, please contact your system
+            administrator or teacher for assistance.
+        </p>
+        <p>
+            When reporting an issue, please include:
+        </p>
+        <ul>
+            <li>Your account role (teacher or student)</li>
+            <li>The test name or share code</li>
+            <li>A description of the problem</li>
+            <li>Any error messages you received</li>
+            <li>Screenshots if applicable</li>
+        </ul>
+    </div>
+
+    <div class="policy-section">
+        <h2>Additional Resources</h2>
+        <ul>
+            <li><a href="/about" style="color: #4CAF50;">About SmartGrader</a> - Learn more about our platform</li>
+            <li><a href="/privacy" style="color: #4CAF50;">Privacy Policy</a> - How we protect your data</li>
+            <li><a href="/terms" style="color: #4CAF50;">Terms of Service</a> - Usage terms and conditions</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
