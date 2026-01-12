@@ -122,46 +122,53 @@ def _build_questions(payload):
 
 
 def _ensure_grader_test(entry):
-    """Create a TestGrader.Test row for this generated test if it does not already exist."""
-    try:
-        return GraderTest.objects.get(id=entry.id, created_by=entry.owner)
-    except GraderTest.DoesNotExist:
-        payload = entry.payload or {}
-        questions_payload = payload.get("questions", [])
-        normalized = []
-        max_options = 0
+    """Create or update a TestGrader.Test row for this generated test."""
+    payload = entry.payload or {}
+    questions_payload = payload.get("questions", [])
+    normalized = []
+    max_options = 0
 
-        for q in questions_payload:
-            options = q.get("options") or []
-            max_options = max(max_options, len(options))
-            try:
-                correct_answer = int(q.get("correct_answer", 0))
-            except (TypeError, ValueError):
-                correct_answer = 0
+    for q in questions_payload:
+        options = q.get("options") or []
+        max_options = max(max_options, len(options))
 
-            normalized.append(
-                {
-                    "question": q.get("text") or q.get("question") or "",
-                    "options": options,
-                    "correct_answer": correct_answer,
-                }
-            )
-
+        # Handle correct_answer which can be int, list, or string
+        raw_answer = q.get("correct_answer", 0)
         try:
-            num_options = int(payload.get("num_answers") or payload.get("num_options") or max_options or 5)
-        except (TypeError, ValueError):
-            num_options = max_options or 5
+            if isinstance(raw_answer, list):
+                # If it's a list, take the first element
+                correct_answer = int(raw_answer[0]) if raw_answer else 0
+            else:
+                correct_answer = int(raw_answer)
+        except (TypeError, ValueError, IndexError):
+            correct_answer = 0
 
-        grader_test = GraderTest.objects.create(
-            id=entry.id,
-            title=entry.title,
-            description=entry.description or "",
-            questions=normalized,
-            created_by=entry.owner,
-            num_questions=len(normalized),
-            num_options=num_options,
+        normalized.append(
+            {
+                "question": q.get("text") or q.get("question") or "",
+                "options": options,
+                "correct_answer": correct_answer,
+            }
         )
-        return grader_test
+
+    try:
+        num_options = int(payload.get("num_answers") or payload.get("num_options") or max_options or 5)
+    except (TypeError, ValueError):
+        num_options = max_options or 5
+
+    # Update existing or create new
+    grader_test, created = GraderTest.objects.update_or_create(
+        id=entry.id,
+        defaults={
+            'title': entry.title,
+            'description': entry.description or "",
+            'questions': normalized,
+            'created_by': entry.owner,
+            'num_questions': len(normalized),
+            'num_options': num_options,
+        }
+    )
+    return grader_test
 
 
 def test_detail_page(request, test_id: int):
