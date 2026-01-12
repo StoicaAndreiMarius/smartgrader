@@ -351,6 +351,23 @@
         </div>
     </div>
 
+    {% if available_tests %}
+    <div class="recent-tests">
+        <h2>Available Tests</h2>
+        {% for test in available_tests %}
+        <div class="test-card" style="border-left-color: #2196F3;">
+            <h3>{{ test.title }}</h3>
+            <p><strong>Questions:</strong> {{ test.num_questions }}</p>
+            <p><strong>Status:</strong> <span style="color: #FFC107;">Not submitted yet</span></p>
+            <a href="{% url 'student-test-access' test.share_code %}" class="view-result-btn">
+                <i class='bx bx-pencil'></i>
+                Continue Test
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     {% if recent_submissions %}
     <div class="recent-tests">
         <h2>Your Recent Submissions</h2>

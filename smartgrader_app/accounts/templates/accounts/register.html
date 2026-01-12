@@ -3,7 +3,13 @@
 {% block title %} SmartGrader - Register {% endblock %}
 
 {% block content %}
-    <main style="display: flex; justify-content: center; align-items: center; flex-grow: 1;">
-        {% include 'components/register_form.html' %}
-    </main>
+<style>
+    main {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        padding: 40px 20px !important;
+    }
+</style>
+{% include 'components/register_form.html' %}
 {% endblock %}
