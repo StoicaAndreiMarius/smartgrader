@@ -199,7 +199,6 @@ smartgrader/
 ```
 ## Architecture
 
-The application follows a layered architecture with clear separation of concerns. The frontend uses Django's templating system with static CSS/JS files, while the backend is organized into four main modules: **Accounts** (authentication), **Test Generator** (test creation), **Test Grader** (submission grading), and **Dashboard** (analytics). Data is persisted in a PostgreSQL database hosted on Supabase, with external integrations for Google OAuth and AI-powered grading.
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#4F46E5', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3730A3', 'lineColor': '#6366F1', 'secondaryColor': '#F3F4F6', 'tertiaryColor': '#EEF2FF'}}}%%
 
