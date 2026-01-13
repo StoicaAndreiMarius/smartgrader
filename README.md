@@ -1,4 +1,4 @@
-# SmartGrader
+<img width="588" height="395" alt="image" src="https://github.com/user-attachments/assets/1e07be2a-6afe-4097-aaa4-93c7734a573d" /># SmartGrader
 SmartGrader is a Django-based toolkit for creating, printing, scanning, and grading multiple-choice tests.
 
 ## What's inside
@@ -95,9 +95,6 @@ PY
 - OpenCV errors often mean missing system packages; install OS-level OpenCV deps and rerun `pip install -r requirements.txt`.
 
 ## Project Tree
-# SmartGrader
-
-## Project Structure
 
 ```
 smartgrader/
@@ -199,4 +196,67 @@ smartgrader/
 └── media/                    # User uploaded files
     ├── submissions/
     └── temp/
+```
+
+## Arhitecture
+
+```
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#4F46E5', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3730A3', 'lineColor': '#6366F1', 'secondaryColor': '#F3F4F6', 'tertiaryColor': '#EEF2FF'}}}%%
+
+flowchart TB
+    subgraph CLIENT["🖥️ Client Layer"]
+        Browser["Web Browser"]
+    end
+
+    subgraph FRONTEND["🎨 Frontend"]
+        Templates["Django Templates"]
+        Static["Static Files<br/>(CSS/JS)"]
+    end
+
+    subgraph DJANGO["⚙️ Django Backend"]
+        subgraph APPS["Applications"]
+            Accounts["👤 Accounts<br/><small>Authentication<br/>User Management</small>"]
+            TestGen["📝 Test Generator<br/><small>Create Tests<br/>Generate PDF</small>"]
+            TestGrader["✅ Test Grader<br/><small>Grade Submissions<br/>Results</small>"]
+            Dashboard["📊 Dashboard<br/><small>Overview<br/>Statistics</small>"]
+        end
+        
+        URLs["URL Router"]
+        Views["Views"]
+        Models["Models"]
+    end
+
+    subgraph DATA["💾 Data Layer"]
+        Supabase[("PostgreSQL<br/>Supabase")]
+    end
+
+    subgraph EXTERNAL["🌐 External Services"]
+        Google["Google OAuth<br/><small>Sign In</small>"]
+        AI["AI Service<br/><small>Auto Grading</small>"]
+    end
+
+    Browser <--> Templates
+    Templates <--> Static
+    Templates <--> URLs
+    URLs <--> Views
+    Views <--> Models
+    Views <--> Accounts
+    Views <--> TestGen
+    Views <--> TestGrader
+    Views <--> Dashboard
+    Models <--> Supabase
+    Accounts <-.-> Google
+    TestGrader <-.-> AI
+
+    classDef client fill:#E0E7FF,stroke:#4F46E5,color:#1E1B4B
+    classDef frontend fill:#FEF3C7,stroke:#D97706,color:#78350F
+    classDef backend fill:#D1FAE5,stroke:#059669,color:#064E3B
+    classDef data fill:#FEE2E2,stroke:#DC2626,color:#7F1D1D
+    classDef external fill:#E0E7FF,stroke:#7C3AED,color:#4C1D95
+
+    class Browser client
+    class Templates,Static frontend
+    class Accounts,TestGen,TestGrader,Dashboard,URLs,Views,Models backend
+    class Supabase data
+    class Google,AI external
 ```
