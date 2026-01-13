@@ -199,25 +199,26 @@ smartgrader/
 ```
 ## Architecture
 
+The application follows a layered architecture with clear separation of concerns. The frontend uses Django's templating system with static CSS/JS files, while the backend is organized into four main modules: **Accounts** (authentication), **Test Generator** (test creation), **Test Grader** (submission grading), and **Dashboard** (analytics). Data is persisted in a PostgreSQL database hosted on Supabase, with external integrations for Google OAuth and AI-powered grading.
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#4F46E5', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3730A3', 'lineColor': '#6366F1', 'secondaryColor': '#F3F4F6', 'tertiaryColor': '#EEF2FF'}}}%%
 
 flowchart TB
-    subgraph CLIENT["🖥️ Client Layer"]
+    subgraph CLIENT["Client Layer"]
         Browser["Web Browser"]
     end
 
-    subgraph FRONTEND["🎨 Frontend"]
+    subgraph FRONTEND["Frontend"]
         Templates["Django Templates"]
         Static["Static Files<br/>(CSS/JS)"]
     end
 
-    subgraph DJANGO["⚙️ Django Backend"]
+    subgraph DJANGO["Django Backend"]
         subgraph APPS["Applications"]
-            Accounts["👤 Accounts<br/><small>Authentication<br/>User Management</small>"]
-            TestGen["📝 Test Generator<br/><small>Create Tests<br/>Generate PDF</small>"]
-            TestGrader["✅ Test Grader<br/><small>Grade Submissions<br/>Results</small>"]
-            Dashboard["📊 Dashboard<br/><small>Overview<br/>Statistics</small>"]
+            Accounts["Accounts<br/><small>Authentication<br/>User Management</small>"]
+            TestGen["Test Generator<br/><small>Create Tests<br/>Generate PDF</small>"]
+            TestGrader["Test Grader<br/><small>Grade Submissions<br/>Results</small>"]
+            Dashboard["Dashboard<br/><small>Overview<br/>Statistics</small>"]
         end
         
         URLs["URL Router"]
@@ -225,11 +226,11 @@ flowchart TB
         Models["Models"]
     end
 
-    subgraph DATA["💾 Data Layer"]
+    subgraph DATA["Data Layer"]
         Supabase[("PostgreSQL<br/>Supabase")]
     end
 
-    subgraph EXTERNAL["🌐 External Services"]
+    subgraph EXTERNAL["External Services"]
         Google["Google OAuth<br/><small>Sign In</small>"]
         AI["AI Service<br/><small>Auto Grading</small>"]
     end
