@@ -93,3 +93,110 @@ PY
 ## Troubleshooting
 - If fonts fail to load in PDFs, ensure `fonts/arial.ttf` and `fonts/arialbd.ttf` exist.
 - OpenCV errors often mean missing system packages; install OS-level OpenCV deps and rerun `pip install -r requirements.txt`.
+
+## Project Tree
+# SmartGrader
+
+## Project Structure
+
+```
+smartgrader/
+│
+├── manage.py
+├── db.sqlite3
+│
+├── smartgrader_app/          # Main Django project settings
+│   ├── settings.py
+│   ├── urls.py
+│   ├── wsgi.py
+│   └── asgi.py
+│
+├── accounts/                 # User authentication & management
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+│   ├── signals.py
+│   └── templates/accounts/
+│       ├── landing.html
+│       ├── login.html
+│       └── register.html
+│
+├── dashboard/                # Dashboard functionality
+│   ├── models.py
+│   └── views.py
+│
+├── test_generator/           # Test creation module
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+│   ├── static/test_generator/
+│   │   ├── css/
+│   │   │   ├── test_detail.css
+│   │   │   ├── test_generator.css
+│   │   │   └── test_list.css
+│   │   └── js/
+│   │       ├── test_detail.js
+│   │       ├── test_generator.js
+│   │       └── test_list.js
+│   └── templates/test_generator/
+│       ├── test_detail.html
+│       ├── test_generator.html
+│       ├── test_list.html
+│       └── _test_generator_body.html
+│
+├── test_grader/              # Test grading & submissions
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+│   ├── utils.py
+│   ├── decorators.py
+│   ├── static/test_grader/js/
+│   │   ├── share_code.js
+│   │   └── test_submissions.js
+│   └── templates/test_grader/
+│       ├── student_dashboard.html
+│       ├── student_result.html
+│       ├── student_test_access.html
+│       ├── submission_detail.html
+│       ├── access_denied.html
+│       ├── submissions_closed.html
+│       └── test_not_found.html
+│
+├── templates/                # Global templates
+│   ├── base.html
+│   ├── about.html
+│   ├── help.html
+│   ├── information.html
+│   ├── privacy.html
+│   ├── support.html
+│   ├── terms.html
+│   └── components/
+│       ├── navbar.html
+│       ├── footer.html
+│       ├── sidebar.html
+│       ├── login_form.html
+│       ├── register_form.html
+│       ├── google_sign_in_button.html
+│       └── test_generator_modal.html
+│
+├── static/                   # Global static files
+│   ├── css/
+│   │   ├── variables.css
+│   │   ├── navbar.css
+│   │   ├── footer.css
+│   │   ├── sidebar.css
+│   │   ├── login_form.css
+│   │   └── register_form.css
+│   ├── js/
+│   │   ├── navbar.js
+│   │   ├── login.js
+│   │   └── register.js
+│   ├── img/
+│   │   └── (logo files)
+│   └── generated/
+│       └── (generated test files)
+│
+└── media/                    # User uploaded files
+    ├── submissions/
+    └── temp/
+```
