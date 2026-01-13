@@ -1,4 +1,4 @@
-<img width="588" height="395" alt="image" src="https://github.com/user-attachments/assets/1e07be2a-6afe-4097-aaa4-93c7734a573d" /># SmartGrader
+# SmartGrader
 SmartGrader is a Django-based toolkit for creating, printing, scanning, and grading multiple-choice tests.
 
 ## What's inside
